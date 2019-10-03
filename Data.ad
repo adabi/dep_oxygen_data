@@ -1329,19 +1329,19 @@ cell_line="RLE6TN"
 		plate="1"
 		file="Data\MTT\MTT 9-3-19\RLE6TN + DEP 0.45UM 24HRS Normoxia MTT 9-3-19.xlsx"
 		range="B2:M9"
-		concentrations=[Blank]:[],[20 ug/ml]:[],[50 ug/ml]:[],[100 ug/ml]:[]
+		concentrations=[Blank]:[6, 8],[20 ug/ml]:[3, 4],[50 ug/ml]:[7, 10],[100 ug/ml]:[5, 9]
 		}
 		{
 		plate="2"
 		file="Data\MTT\MTT 9-3-19\RLE6TN + DEP 0.45UM 24HRS Normoxia MTT 9-3-19.xlsx"
 		range="B12:M19"
-		concentrations=[Blank]:[],[20 ug/ml]:[],[50 ug/ml]:[],[100 ug/ml]:[]
+		concentrations=[Blank]:[7, 10],[20 ug/ml]:[6, 9],[50 ug/ml]:[4, 5],[100 ug/ml]:[3, 8]
 		}
 		{
 		plate="3"
 		file="Data\MTT\MTT 9-3-19\RLE6TN + DEP 0.45UM 24HRS Normoxia MTT 9-3-19.xlsx"
 		range="B22:M30"
-		concentrations=[Blank]:[],[20 ug/ml]:[],[50 ug/ml]:[],[100 ug/ml]:[]
+		concentrations=[Blank]:[4, 8],[20 ug/ml]:[7, 9],[50 ug/ml]:[3, 6],[100 ug/ml]:[5, 10]
 		}
 	}
 	{
@@ -1353,5 +1353,23 @@ cell_line="RLE6TN"
 	condition="Hypoxia"
 	assay="MTT"
 	comments=""
+		{
+		plate="1"
+		file="Data\LDH\LDH 9-3-19\RLE6TN + DEP 0.45UM 24HRS Hypoxia LDH 9-3-19.xlsx"
+		range="B2:M9"
+		concentrations=[Blank]:[6, 8],[20 ug/ml]:[3, 4],[50 ug/ml]:[7, 10],[100 ug/ml]:[5, 9]
+		}
+		{
+		plate="2"
+		file="Data\LDH\LDH 9-3-19\RLE6TN + DEP 0.45UM 24HRS Hypoxia LDH 9-3-19.xlsx"
+		range="B12:M19"
+		concentrations=[Blank]:[7, 10],[20 ug/ml]:[6, 9],[50 ug/ml]:[4, 5],[100 ug/ml]:[3, 8]
+		}
+		{
+		plate="3"
+		file="Data\LDH\LDH 9-3-19\RLE6TN + DEP 0.45UM 24HRS Hypoxia LDH 9-3-19.xlsx"
+		range="B22:M30"
+		concentrations=[Blank]:[4, 8],[20 ug/ml]:[7, 9],[50 ug/ml]:[3, 6],[100 ug/ml]:[5, 10]
+		}
 	}
 }
