@@ -1372,4 +1372,116 @@ cell_line="RLE6TN"
 		concentrations=[Blank]:[4, 8],[20 ug/ml]:[7, 9],[50 ug/ml]:[3, 6],[100 ug/ml]:[5, 10]
 		}
 	}
+	{
+	experiment="5"
+	date="9/1/2019"
+	compounds="Ox66"
+	concentrations="Blank, 20 ug/ml, 50 ug/ml, 100 ug/ml"
+	exposure_time="24 Hours"
+	condition="Normoxia"
+	assay="LDH"
+	comments=""
+		{
+		plate="1"
+		file="Data\LDH\LDH 9-2-10\RLE6TN + Ox66 24HRS Normoxia LDH 9-2-19.xlsx"
+		range="B4:M11"
+		concentrations=[Blank]:[],[20 ug/ml]:[],[50 ug/ml]:[],[100 ug/ml]:[]
+		}
+		{
+		plate="2"
+		file="Data\LDH\LDH 9-2-10\RLE6TN + Ox66 24HRS Normoxia LDH 9-2-19.xlsx"
+		range="B14:M21"
+		concentrations=[Blank]:[],[20 ug/ml]:[],[50 ug/ml]:[],[100 ug/ml]:[]
+		}
+		{
+		plate="3"
+		file="Data\LDH\LDH 9-2-10\RLE6TN + Ox66 24HRS Normoxia LDH 9-2-19.xlsx"
+		range="B24:M32"
+		concentrations=[Blank]:[],[20 ug/ml]:[],[50 ug/ml]:[],[100 ug/ml]:[]
+		}
+	}
+	{
+	experiment="6"
+	date="9/1/2019"
+	compounds="Ox66"
+	concentrations="Blank, 20 ug/ml, 50 ug/ml, 100 ug/ml"
+	exposure_time="24 Hours"
+	condition="Hypoxia"
+	assay="LDH"
+	comments=""
+		{
+		plate="1"
+		file="Data\LDH\LDH 9-2-10\RLE6TN + Ox66 24HRS Hypoxia LDH 9-2-19.xlsx"
+		range="B2:M9"
+		concentrations=[Blank]:[],[20 ug/ml]:[],[50 ug/ml]:[],[100 ug/ml]:[]
+		}
+		{
+		plate="2"
+		file="Data\LDH\LDH 9-2-10\RLE6TN + Ox66 24HRS Hypoxia LDH 9-2-19.xlsx"
+		range="B12:M19"
+		concentrations=[Blank]:[],[20 ug/ml]:[],[50 ug/ml]:[],[100 ug/ml]:[]
+		}
+		{
+		plate="3"
+		file="Data\LDH\LDH 9-2-10\RLE6TN + Ox66 24HRS Hypoxia LDH 9-2-19.xlsx"
+		range="B22:M30"
+		concentrations=[Blank]:[],[20 ug/ml]:[],[50 ug/ml]:[],[100 ug/ml]:[]
+		}
+	}
+	{
+	experiment="7"
+	date="9/4/2019"
+	compounds="DEP + Ox66"
+	concentrations="Blank, 20 ug/ml, 50 ug/ml, 100 ug/ml"
+	exposure_time="24 Hours"
+	condition="Normoxia"
+	assay="LDH"
+	comments=""
+		{
+		plate="1"
+		file="Data\LDH\LDH 9-5-19\RLE6TN + Ox66 + DEP 0.45UM 24HRS Normoxia LDH 9-5-19.xlsx"
+		range="B2:M9"
+		concentrations=[Blank]:[],[20 ug/ml]:[],[50 ug/ml]:[],[100 ug/ml]:[]
+		}
+		{
+		plate="2"
+		file="Data\LDH\LDH 9-5-19\RLE6TN + Ox66 + DEP 0.45UM 24HRS Normoxia LDH 9-5-19.xlsx"
+		range="B12:M19"
+		concentrations=[Blank]:[],[20 ug/ml]:[],[50 ug/ml]:[],[100 ug/ml]:[]
+		}
+		{
+		plate="3"
+		file="Data\LDH\LDH 9-5-19\RLE6TN + Ox66 + DEP 0.45UM 24HRS Normoxia LDH 9-5-19.xlsx"
+		range="B22:M30"
+		concentrations=[Blank]:[],[20 ug/ml]:[],[50 ug/ml]:[],[100 ug/ml]:[]
+		}
+	}
+	{
+	experiment="8"
+	date="9/4/2019"
+	compounds="DEP + Ox66"
+	concentrations="Blank, 20 ug/ml, 50 ug/ml, 100 ug/ml"
+	exposure_time="24 Hours"
+	condition="Hypoxia"
+	assay="LDH"
+	comments=""
+		{
+		plate="1"
+		file="Data\LDH\LDH 9-5-19\RLE6TN + Ox66 + DEP 0.45UM 24HRS Hypoxia LDH 9-5-19.xlsx"
+		range="B4:M11"
+		concentrations=[Blank]:[],[20 ug/ml]:[],[50 ug/ml]:[],[100 ug/ml]:[]
+		}
+		{
+		plate="2"
+		file="Data\LDH\LDH 9-5-19\RLE6TN + Ox66 + DEP 0.45UM 24HRS Hypoxia LDH 9-5-19.xlsx"
+		range="B14:M21"
+		concentrations=[Blank]:[],[20 ug/ml]:[],[50 ug/ml]:[],[100 ug/ml]:[]
+		}
+		{
+		plate="3"
+		file="Data\LDH\LDH 9-5-19\RLE6TN + Ox66 + DEP 0.45UM 24HRS Hypoxia LDH 9-5-19.xlsx"
+		range="B24:M32"
+		concentrations=[Blank]:[],[20 ug/ml]:[],[50 ug/ml]:[],[100 ug/ml]:[]
+		}
+	}
 }

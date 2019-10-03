@@ -74,8 +74,8 @@ class ExcelSaveWindow(QtWidgets.QMainWindow):
                 source_model=x['save_model'],
                 destination_model=x['available_model']
             ))
-
-    def move_items(self, selection_model, source_model, destination_model):
+    @staticmethod
+    def move_items(selection_model, source_model, destination_model):
         selected_indices = selection_model.selectedIndexes()
         rows = [index.row() for index in selected_indices]
         cells_to_add = [source_model.data[row] for row in rows]
@@ -109,11 +109,8 @@ class ExcelSaveWindow(QtWidgets.QMainWindow):
                 exposure_time = experiment[4]
                 condition = experiment[5]
                 assay = experiment[6]
-                #values = {}
                 file_grab_successful = True
-                #for concentration in concentrations:
-                   #values[concentration] = []
-                plates = parsing.grab_plates(cell_line, experiment[0], concentrations)
+                plates = parsing.grab_plates(cell_line, experiment[0])
 
                 for plate in plates:
                     try:

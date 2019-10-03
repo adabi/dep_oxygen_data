@@ -346,8 +346,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
     def save_to_excel(self):
-        self.excel_window = ExcelSaveWindow()
-        self.excel_window.show()
+        excel_window = ExcelSaveWindow()
+        excel_window.show()
 
         '''
         concentrations = self.plates_model.concentrations
