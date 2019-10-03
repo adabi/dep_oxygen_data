@@ -1,6 +1,5 @@
 from PyQt5 import QtCore, QtWidgets, uic
 import sys
-import os
 import pathlib
 from parsing import grab_cell_lines, grab_experiments, grab_plates, delete_experiment, delete_plate
 from models import ExperimentsModel, PlatesModel
@@ -27,14 +26,14 @@ class FilterSortingModel(QtCore.QSortFilterProxyModel):
         return QtCore.QSortFilterProxyModel.lessThan(self, left, right)
 
     def filterAcceptsRow(self, source_row, source_parent):
-        filters = [x.strip() for x in self.parent.txtFilter.text().split(",")]
+        criteria = [x.strip() for x in self.parent.txtFilter.text().split(",")]
         if self.parent.txtFilter.text().strip() == "":
             return True
         else:
             if source_row < self.sourceModel().rowCount() - 1:
                 match = True
-                for filter in filters:
-                    match = match and filter in self.sourceModel().data[source_row]
+                for criterion in criteria:
+                    match = match and criterion in self.sourceModel().data[source_row]
                 return match
             else:
                 return True
@@ -117,6 +116,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.bttnPaste.clicked.connect(self.paste_concentrations)
         self.bttnPaste.setEnabled(False)
         self.txtFilter.textChanged.connect(self.filter_txt_changed)
+        self.plates_model = PlatesModel([], None, None, [], None)
+        self.platesSelectionModel = self.tablePlates.selectionModel()
+        self.tablePlates.setModel(self.plates_model)
 
     def center(self):
         frameGm = self.frameGeometry()
@@ -132,11 +134,10 @@ class MainWindow(QtWidgets.QMainWindow):
             experiment = self.experiments_model.data[row][0]
             concentrations = self.experiments_model.data[row][3]
             assay = self.experiments_model.data[row][6]
+            cell_line = self.comboCellLines.currentText()
             concentrations = [x.strip() for x in concentrations.split(",")]
-            plates= grab_plates(self.comboCellLines.currentText(), experiment)
-            self.plates_model = PlatesModel(plates, self.comboCellLines.currentText(), experiment, concentrations, assay)
-            self.tablePlates.setModel(self.plates_model)
-            self.platesSelectionModel = self.tablePlates.selectionModel()
+            plates= grab_plates(cell_line, experiment)
+            self.plates_model.resetModel(plates, cell_line, experiment, concentrations, assay)
             self.comboSignificant.clear()
             self.comboSignificant.addItems(concentrations)
             if "Blank" in concentrations:
@@ -341,9 +342,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def new_cell_line(self):
         experiments = grab_experiments(self.comboCellLines.currentText())
-        self.experiments_model = ExperimentsModel(experiments, self.comboCellLines.currentText())
-        self.proxyModel.setSourceModel(self.experiments_model)
-        self.current_cell_line = self.comboCellLines.currentText()
+        self.experiments_model.resetModel(experiments, self.comboCellLines.currentText())
+
 
     def save_to_excel(self):
         self.excel_window = ExcelSaveWindow()

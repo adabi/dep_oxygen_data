@@ -85,11 +85,12 @@ class ExperimentsModel(QtCore.QAbstractTableModel):
         self.endRemoveRows()
         self.number_of_rows -= 1
 
-    '''def sort(self, p_int, order=None):
-        self.data = sorted(self.data, key=lambda x: x[p_int], reverse=order == 1)
-        index1 = self.createIndex(0, 0)
-        index2 = self.createIndex(len(self.data) - 1, 10)
-        self.dataChanged.emit(index1, index2)'''
+    def resetModel(self, data, cell_line):
+        self.beginResetModel()
+        self.cell_line = cell_line
+        self.data = data
+        self.number_of_rows = len(data) + 1
+        self.endResetModel()
 
 
 class PlatesModel(QtCore.QAbstractTableModel):
@@ -235,6 +236,23 @@ class PlatesModel(QtCore.QAbstractTableModel):
         index2 = self.createIndex(len(self.data) - 1, 10)
         self.dataChanged.emit(index1, index2)
 
+    def resetModel(self, data, cell_line, experiment, concentrations, assay):
+        self.beginResetModel()
+        self.cell_line = cell_line
+        self.data = data
+        self.number_of_rows = len(data) + 1
+        self.experiment = experiment
+        self.concentrations = concentrations
+        self.assay = assay
+        for item in data:
+            for concentration in concentrations:
+                if concentration not in item[3]:
+                    item[3][concentration] = []
+
+        self.headers = ["ID", "File", "Range"] + concentrations
+        self.fields = ["plate", "file", "range"] + self.concentrations
+
+        self.endResetModel()
 
 class CompareModel(QtCore.QAbstractTableModel):
 
