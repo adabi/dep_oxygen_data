@@ -1,30 +1,27 @@
 import re
+import pathlib
 with open("Data.ad", encoding='utf-8') as file:
     f = file.readlines()
 
-lines_inserted = 0
 for index, line in enumerate(f):
-    match = re.search(r'comments="(.*)"', line)
-    string_to_add = ""
+    match = re.search(r'file="(.*)"', line)
     if match:
-        print(match.group(1), " at ", index)
-        if "LDH" in match.group(1):
-            string_to_add = ("\tassay=\"LDH\"\n")
-        elif "MTT" in match.group(1):
-            string_to_add = ("\tassay=\"MTT\"\n")
+        print(match.group(1))
+        old_path = match.group(1)
+        new_path = pathlib.PureWindowsPath(old_path)
+        new_path = str(pathlib.Path(new_path))
+        new_line = line.replace(old_path, new_path)
+        print(line, new_line)
 
-        if string_to_add != "":
-            with open("Data.ad", encoding='utf-8') as file:
-                buf = file.readlines()
-                file.close()
+        with open("Data.ad", encoding='utf-8') as file:
+            buf = file.readlines()
+            file.close()
 
-            with open("Data.ad", "w") as out_file:
-                buf.insert(index + lines_inserted, string_to_add)
-                buf = "".join(buf)
-                out_file.write(buf)
-                out_file.close()
-                lines_inserted += 1
-
+        with open("Data.ad", "w") as out_file:
+            buf[index] = new_line
+            buf = "".join(buf)
+            out_file.write(buf)
+            out_file.close()
 
 
 

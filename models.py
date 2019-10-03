@@ -1,6 +1,6 @@
 from PyQt5 import QtCore, QtWidgets
 from parsing import add_experiment, modify_experiment, add_plate, modify_plate
-from collections import OrderedDict
+import pathlib
 
 
 class ExperimentsModel(QtCore.QAbstractTableModel):
@@ -64,7 +64,7 @@ class ExperimentsModel(QtCore.QAbstractTableModel):
                 else:
                     new_id = max(int(x[0]) for x in self.data) + 1
                     new_id = str(new_id)
-                self.data.append([new_id, Any, "", "", "", "", "", "", ""])
+                self.data.append([new_id, new_id, "", "", "", "", "", "", ""])
                 self.beginInsertRows(QtCore.QModelIndex(), self.number_of_rows, self.number_of_rows)
                 self.insertRow(self.number_of_rows)
                 self.endInsertRows()
@@ -167,7 +167,9 @@ class PlatesModel(QtCore.QAbstractTableModel):
                     new_id = "1"
                 else:
                     new_id = str(int(self.data[-1][0]) + 1)
-                self.data.append([new_id, Any, ""] + [{x:[] for x in self.concentrations}])
+                file_path = pathlib.PureWindowsPath(Any)
+                self.data.append([new_id, file_path, ""] + [{x: [] for x in self.concentrations}])
+                file_path = pathlib.Path(file_path).as_posix()
                 self.beginInsertRows(QtCore.QModelIndex(), self.number_of_rows, self.number_of_rows)
                 self.insertRow(self.number_of_rows)
                 self.endInsertRows()
@@ -177,7 +179,7 @@ class PlatesModel(QtCore.QAbstractTableModel):
                 for concentration in self.concentrations:
                     blank_concentrations += f"[{concentration}]:[],"
                 blank_concentrations = blank_concentrations[:-1]
-                add_plate(self.cell_line, self.experiment, new_id, Any, "", blank_concentrations)
+                add_plate(self.cell_line, self.experiment, new_id, file_path, "", blank_concentrations)
 
             else:
 
@@ -205,8 +207,13 @@ class PlatesModel(QtCore.QAbstractTableModel):
 
                     field = self.fields[column]
                     self.data[row][column] = Any
+                    if field == "file":
+                        new_data = pathlib.PureWindowsPath(field)
+                        new_data = str(pathlib.Path(new_data).as_posix())
+                    else:
+                        new_data = Any
                     self.dataChanged.emit(QModelIndex, QModelIndex)
-                    modify_plate(self.cell_line, self.experiment, self.data[row][0], field, Any)
+                    modify_plate(self.cell_line, self.experiment, self.data[row][0], field, new_data)
 
         return True
 

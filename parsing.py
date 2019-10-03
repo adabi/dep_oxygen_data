@@ -284,14 +284,8 @@ def modify_plate(cell_line, experiment, plate, field, new):
                     line_to_replace = index
                     break
 
-
-
-
-
-
     if line_to_replace is None:
         print("Error. Couldn't find the field.")
-        print([cell_line_starts_at, experiment_starts_at, current_plate_starts_at])
 
     else:
         with open("Data.ad", "r") as file:

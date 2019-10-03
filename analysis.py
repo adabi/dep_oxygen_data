@@ -68,7 +68,7 @@ class DelegateDropBox(QtWidgets.QStyledItemDelegate):
             items_to_add = (["LDH", "MTT"])
         elif self.field == "Exposure Time":
             items_to_add = ["24 Hours", "48 Hours"]
-        elif self.field == "Compounds":
+        else:
             items_to_add = ["DEP", "Ox66", "DEP + Ox66"]
         combo_box.addItems(items_to_add)
         return combo_box
@@ -138,6 +138,7 @@ class MainWindow(QtWidgets.QMainWindow):
             concentrations = [x.strip() for x in concentrations.split(",")]
             plates= grab_plates(cell_line, experiment)
             self.plates_model.resetModel(plates, cell_line, experiment, concentrations, assay)
+            self.platesSelectionModel = self.tablePlates.selectionModel()
             self.comboSignificant.clear()
             self.comboSignificant.addItems(concentrations)
             if "Blank" in concentrations:
@@ -165,7 +166,8 @@ class MainWindow(QtWidgets.QMainWindow):
             try:
                 df = pd.read_excel(file, header=None)
             except Exception as exc:
-                pass
+                print(exc)
+
             criteria = df.astype(str).eq("A").any(0)
             columns_contaning_A = criteria.index[criteria]
             for column in columns_contaning_A:
@@ -192,7 +194,6 @@ class MainWindow(QtWidgets.QMainWindow):
                     last_rows.append(len(df[column]) + 1)
 
                 for i, row in enumerate(rows_containing_A):
-                    # df_list.append(df.loc[row: last_rows[i] - 1, column + 1:last_column - 1])
                     ranges_list.append([row, last_rows[i] - 1, column + 1, last_column - 1])
 
             return ranges_list
@@ -201,7 +202,8 @@ class MainWindow(QtWidgets.QMainWindow):
         dialog = QtWidgets.QFileDialog()
         dialog.setAcceptMode(QtWidgets.QFileDialog.AcceptOpen)
         if dialog.exec():
-            selected_file = pathlib.Path(dialog.selectedFiles()[0])
+            selected_file = pathlib.PureWindowsPath(dialog.selectedFiles()[0])
+            selected_file = pathlib.Path(selected_file)
             try:
                 selected_file = selected_file.relative_to(pathlib.Path.cwd())
             except Exception as exc:
@@ -209,7 +211,8 @@ class MainWindow(QtWidgets.QMainWindow):
             ranges_list = self.find_table_in_file(selected_file)
 
             for plate_range in ranges_list:
-                range_literal = convert_number_to_letter(plate_range[2]) + str(plate_range[0] + 1) + ":" + convert_number_to_letter(plate_range[3]) + str(plate_range[1] + 1)
+                range_literal = (convert_number_to_letter(plate_range[2]) + str(plate_range[0] + 1) + ":" +
+                                 convert_number_to_letter(plate_range[3]) + str(plate_range[1] + 1))
 
                 index = self.plates_model.createIndex(self.plates_model.number_of_rows - 1, 1)
                 self.plates_model.setData(index, str(selected_file), role=QtCore.Qt.EditRole)
@@ -248,7 +251,8 @@ class MainWindow(QtWidgets.QMainWindow):
             values[concentration] = []
         for item in self.plates_model.data:
             try:
-                df = pd.read_excel(item[1], header=None)
+                file = item[1]
+                df = pd.read_excel(file, header=None)
                 coordinates = []
                 # Split the range down the : character
                 range_split = item[2].split(":")
@@ -267,11 +271,15 @@ class MainWindow(QtWidgets.QMainWindow):
                         values[concentration] += (df_normalized[row].values.tolist())
             except Exception as exc:
                 if exc.args[0] == 2:
+                    print(exc)
                     file_grab_successful = False
                     msgbox = QtWidgets.QMessageBox()
                     msgbox.setText("File not found. Please double check file path")
                     msgbox.setStandardButtons(QtWidgets.QMessageBox.Ok)
                     msgbox.exec()
+                    break
+                else:
+                    print(exc)
                     break
 
         if file_grab_successful:
@@ -348,61 +356,6 @@ class MainWindow(QtWidgets.QMainWindow):
     def save_to_excel(self):
         excel_window = ExcelSaveWindow()
         excel_window.show()
-
-        '''
-        concentrations = self.plates_model.concentrations
-        values = OrderedDict()
-        for concentration in concentrations:
-            values[concentration] = []
-        for item in self.plates_model.data:
-            coordinates = []
-            # Split the range down the : character
-            range_split = item[2].split(":")
-            # Parse each half of the split range into a row, column and then add to the list
-            for range_plate in range_split:
-                match = re.match(r"([a-z]+)([0-9]+)", range_plate, re.I)
-                if match:
-                    items = match.groups()
-                    coordinates += [int(items[1]) - 1, self.convert_letter_to_number(items[0])]
-            df = pd.read_excel(item[1], header=None)
-            df = df.iloc[coordinates[0]:coordinates[2] + 1, coordinates[1]:coordinates[3] + 1]
-            df_normalized = df / df.max(numeric_only=True).max()
-            for concentration in concentrations:
-                rows = item[3][concentration]
-                for row in rows:
-                    values[concentration] += list(df_normalized[row])
-
-        SaveFileDialog = QtWidgets.QFileDialog()
-        SaveFileDialog.setAcceptMode(QtWidgets.QFileDialog.AcceptSave)
-
-        if (SaveFileDialog.exec()):
-            filewrite = SaveFileDialog.selectedFiles()[0]
-            workbookwrite = xlwt.Workbook()
-            sheetwrite = workbookwrite.add_sheet("LDH")
-
-            j = 0
-            k = 4
-            sheetwrite.write(1, 3, "Average")
-            sheetwrite.write(2, 3, "Standard Deviation")
-            sheetwrite.write(3, 3, "Standard Error")
-            for item in values:
-                average = np.average(values[item])
-                std_dev = np.std(values[item], ddof=1)
-                std_error = std_dev / np.sqrt(len(values[item]))
-                sheetwrite.write(0, k, str(item))
-                sheetwrite.write(1, k, average)
-                sheetwrite.write(2, k, std_dev)
-                sheetwrite.write(3, k, std_error)
-                k += 1
-                for value in values[item]:
-                    sheetwrite.write(j, 0, item)
-                    sheetwrite.write(j, 1, value)
-                    j += 1
-
-
-            workbookwrite.save(filewrite)
-
-        '''
 
 
     def openComparisonWindow(self):

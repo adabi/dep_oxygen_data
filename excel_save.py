@@ -96,7 +96,6 @@ class ExcelSaveWindow(QtWidgets.QMainWindow):
         response_lst = []
         for cell_line in cell_lines:
             experiments = parsing.grab_experiments(cell_line)
-            print(experiments)
             experiments = [experiment for experiment in experiments
                            if experiment[2] in compounds and
                            experiment[4] in exposure_times and
@@ -108,9 +107,9 @@ class ExcelSaveWindow(QtWidgets.QMainWindow):
                 concentrations = [x.strip() for x in experiment[3].split(",")]
                 exposure_time = experiment[4]
                 condition = experiment[5]
+                experiment_id = experiment[0]
                 assay = experiment[6]
-                file_grab_successful = True
-                plates = parsing.grab_plates(cell_line, experiment[0])
+                plates = parsing.grab_plates(cell_line, experiment_id)
 
                 for plate in plates:
                     try:
@@ -149,27 +148,23 @@ class ExcelSaveWindow(QtWidgets.QMainWindow):
                                 exposure_time_lst += [exposure_time] * len(values)
 
                     except Exception as exc:
-                        if exc.args[0] == 2:
-                            file_grab_successful = False
-                            msgbox = QtWidgets.QMessageBox()
-                            msgbox.setText("File not found. Please double check file path")
-                            msgbox.setStandardButtons(QtWidgets.QMessageBox.Ok)
-                            msgbox.exec()
-                            break
-                        else:
-                            raise exc
+                            print(f'Problem happened at file {plate[1]}')
 
-                    if file_grab_successful:
-                        full_data_dict = {"Cells": cells_lst,
-                                          "Compound": compound_lst,
-                                          "exposure_time": exposure_time_lst,
-                                          "condition": condition_lst,
-                                          "treatment": treatment_lst,
-                                          "response": response_lst}
-                        print(len(cells_lst), len(compound_lst), len(exposure_time_lst), len(condition_lst), len(treatment_lst), len(response_lst))
-                        full_data_df = pd.DataFrame(data=full_data_dict)
-                        print(full_data_df)
+        full_data_dict = {"cells": cells_lst,
+                          "compound": compound_lst,
+                          "exposure_time": exposure_time_lst,
+                          "condition": condition_lst,
+                          "treatment": treatment_lst,
+                          "response": response_lst}
 
+        full_data_df = pd.DataFrame(data=full_data_dict)
+        file_save_dialog = QtWidgets.QFileDialog()
+        file_save_dialog.setAcceptMode(QtWidgets.QFileDialog.AcceptSave)
+        file_save_dialog.setNameFilter("CSV (*.csv)")
+        file_save_dialog.setDefaultSuffix("csv")
+        if file_save_dialog.exec():
+            file_save_path = file_save_dialog.selectedFiles()[0]
+            full_data_df.to_csv(path_or_buf=file_save_path, index=False)
 
 def convert_letter_to_number(letter):
     total = 0
