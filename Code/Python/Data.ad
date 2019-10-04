@@ -1290,34 +1290,6 @@ cell_line="A549"
 		concentrations=[Blank]:[4, 7],[20 ug/ml]:[8, 10],[50 ug/ml]:[6, 9],[100 ug/ml]:[5, 11]
 		}
 	}
-	{
-	experiment="9"
-	date="6/10/2018"
-	compounds="Ox66"
-	concentrations="Blank, 50 ppm, 100 ppm, 200 ppm"
-	exposure_time="48 Hours"
-	condition="Normoxia"
-	assay="LDH"
-	comments=""
-		{
-		plate="1"
-		file="Data/LDH/LDH 6-12-19/A549 + Ox66 48HOURS Normoxia LDH 6-12-19.xlsx"
-		range="B2:M9"
-		concentrations=[Blank]:[],[50 ppm]:[],[100 ppm]:[],[200 ppm]:[]
-		}
-		{
-		plate="2"
-		file="Data/LDH/LDH 6-12-19/A549 + Ox66 48HOURS Normoxia LDH 6-12-19.xlsx"
-		range="B12:M19"
-		concentrations=[Blank]:[],[50 ppm]:[],[100 ppm]:[],[200 ppm]:[]
-		}
-		{
-		plate="3"
-		file="Data/LDH/LDH 6-12-19/A549 + Ox66 48HOURS Normoxia LDH 6-12-19.xlsx"
-		range="B22:M30"
-		concentrations=[Blank]:[],[50 ppm]:[],[100 ppm]:[],[200 ppm]:[]
-		}
-	}
 }
 
 {
