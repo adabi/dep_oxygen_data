@@ -4,6 +4,7 @@ import parsing
 import pandas as pd
 import re
 import numpy as np
+import pathlib
 
 class ExcelSaveWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -64,16 +65,25 @@ class ExcelSaveWindow(QtWidgets.QMainWindow):
             item['save_list'].setModel(item['save_model'])
             item['save_list'].setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
             item['save_selection_model'] = item['save_list'].selectionModel()
+            item['available_list'].doubleClicked.connect(lambda index, x=item: self.move_items(
+                selection_model=x['available_selection_model'],
+                source_model=x['available_model'],
+                destination_model=x['save_model']))
             item['add_button'].clicked.connect(lambda state, x=item: self.move_items(
                 selection_model=x['available_selection_model'],
                 source_model=x['available_model'],
                 destination_model=x['save_model']
             ))
+            item['save_list'].doubleClicked.connect(lambda index, x=item: self.move_items(
+                selection_model=x['save_selection_model'],
+                source_model=x['save_model'],
+                destination_model=x['availabe_model']))
             item['delete_button'].clicked.connect(lambda state, x=item: self.move_items(
                 selection_model=x['save_selection_model'],
                 source_model=x['save_model'],
                 destination_model=x['available_model']
             ))
+
     @staticmethod
     def move_items(selection_model, source_model, destination_model):
         selected_indices = selection_model.selectedIndexes()
@@ -113,7 +123,8 @@ class ExcelSaveWindow(QtWidgets.QMainWindow):
 
                 for plate in plates:
                     try:
-                        df = pd.read_excel(plate[1], header=None)
+                        file_path = pathlib.Path.cwd().parent.parent.joinpath(plate[1])
+                        df = pd.read_excel(file_path, header=None)
                         coordinates = []
                         # Split the range down the : character
                         range_split = plate[2].split(":")

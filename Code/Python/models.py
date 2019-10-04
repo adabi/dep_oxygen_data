@@ -6,7 +6,6 @@ import pathlib
 class ExperimentsModel(QtCore.QAbstractTableModel):
 
     sig_changes = QtCore.pyqtSignal(str, str, str)
-
     def __init__(self, data, cell_line):
         super().__init__()
         self.cell_line = cell_line

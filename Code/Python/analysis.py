@@ -102,7 +102,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.tableExperiments.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.experimentsSelectionModel = self.tableExperiments.selectionModel()
         self.bttnAddPlates.clicked.connect(self.add_plates)
-        self.tableExperiments.clicked.connect(self.experiment_selected)
+        #self.tableExperiments.clicked.connect(self.experiment_selected)
+        #self.tableExperiments.selectionChanged.connect(self.experiment_selected)
+        self.tableExperiments.selectionModel().selectionChanged.connect(self.experiment_selected)
         self.tablePlates.doubleClicked.connect(self.open_file_dialog)
         self.bttnDeleteExperiment.clicked.connect(self.delete_experiment)
         self.bttnDeletePlate.clicked.connect(self.delete_plate)
@@ -126,8 +128,8 @@ class MainWindow(QtWidgets.QMainWindow):
         frameGm.moveCenter(centerPoint)
         self.move(frameGm.topLeft())
 
-    def experiment_selected(self):
-        indices = self.experimentsSelectionModel.selectedIndexes()
+    def experiment_selected(self, selected):
+        indices = selected.indexes()
         index = self.proxyModel.mapToSource(indices[0])
         row = index.row()
         if row < self.experiments_model.number_of_rows - 1:
@@ -202,12 +204,13 @@ class MainWindow(QtWidgets.QMainWindow):
         dialog = QtWidgets.QFileDialog()
         dialog.setAcceptMode(QtWidgets.QFileDialog.AcceptOpen)
         if dialog.exec():
-            selected_file = pathlib.PureWindowsPath(dialog.selectedFiles()[0])
+            selected_file = pathlib.PureWindowsPath(dialog.selectedFiles()[0]).as_posix()
             selected_file = pathlib.Path(selected_file)
             try:
-                selected_file = selected_file.relative_to(pathlib.Path.cwd())
+                selected_file_tostore = selected_file.relative_to(pathlib.Path.cwd().parent.parent)
             except Exception as exc:
                 print(exc)
+                selected_file_tostore = selected_file
             ranges_list = self.find_table_in_file(selected_file)
 
             for plate_range in ranges_list:
@@ -215,7 +218,7 @@ class MainWindow(QtWidgets.QMainWindow):
                                  convert_number_to_letter(plate_range[3]) + str(plate_range[1] + 1))
 
                 index = self.plates_model.createIndex(self.plates_model.number_of_rows - 1, 1)
-                self.plates_model.setData(index, str(selected_file), role=QtCore.Qt.EditRole)
+                self.plates_model.setData(index, str(selected_file_tostore), role=QtCore.Qt.EditRole)
 
                 index = self.plates_model.createIndex(self.plates_model.number_of_rows - 2, 2)
                 self.plates_model.setData(index, range_literal, QtCore.Qt.EditRole)
@@ -252,6 +255,7 @@ class MainWindow(QtWidgets.QMainWindow):
         for item in self.plates_model.data:
             try:
                 file = item[1]
+                file = pathlib.Path.cwd().parent.parent.joinpath(file)
                 df = pd.read_excel(file, header=None)
                 coordinates = []
                 # Split the range down the : character

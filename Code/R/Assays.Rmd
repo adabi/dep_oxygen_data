@@ -1,0 +1,46 @@
+---
+title: "Assays"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+
+file_path= "../../Data/Compiled/DITNC1_LDH_nomix.csv"
+df <- read.csv(file_path)
+
+# replace blanks with 0 ug/ml and split the treatment into numbers and units
+df <- 
+  df %>% 
+  mutate(treatment = str_replace(treatment, "Blank", "0 ug/ml"))  %>% 
+  separate(treatment, into=c("treatment", "units"), sep=" ") %>% 
+  mutate(treatment = as.numeric(treatment))
+
+
+df %>%
+  filter(compound=="DEP") %>%
+  unite(group, condition, exposure_time, sep="_" ) %>% 
+  ggplot(aes(x=treatment, y=response, group=group)) +
+  geom_jitter(aes(color=group), width=0.3, alpha= 0.5) +
+  stat_smooth(aes(color=group), method="lm", se=FALSE)
+
+df_alt <-
+  df %>% 
+  mutate(normoxia = condition == "Normoxia") %>% 
+  mutate(hypoxia = condition == "Hypoxia") %>% 
+  select(-condition)
+
+lnr_mdl <-
+  df %>% 
+  filter(compound=="DEP", exposure_time=="48 Hours") %>% 
+  lm(data=., response~(treatment*condition))
+
+lnr_mdl2 <-
+  df_alt %>% 
+  filter(compound == "DEP", exposure_time == "48 Hours") %>% 
+  lm(data=., response~treatment + normoxia + hypoxia)
+
+summary(lnr_mdl)
+
+```
+
