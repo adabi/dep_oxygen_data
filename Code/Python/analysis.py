@@ -102,8 +102,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.tableExperiments.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.experimentsSelectionModel = self.tableExperiments.selectionModel()
         self.bttnAddPlates.clicked.connect(self.add_plates)
-        #self.tableExperiments.clicked.connect(self.experiment_selected)
-        #self.tableExperiments.selectionChanged.connect(self.experiment_selected)
         self.tableExperiments.selectionModel().selectionChanged.connect(self.experiment_selected)
         self.tablePlates.doubleClicked.connect(self.open_file_dialog)
         self.bttnDeleteExperiment.clicked.connect(self.delete_experiment)
@@ -200,7 +198,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
             return ranges_list
 
-    def add_plates(self, index):
+    def add_plates(self):
         dialog = QtWidgets.QFileDialog()
         dialog.setAcceptMode(QtWidgets.QFileDialog.AcceptOpen)
         if dialog.exec():
