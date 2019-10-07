@@ -1,5 +1,6 @@
 from PyQt5 import QtWidgets, QtCore, uic
 import numpy as np
+import pathlib
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
@@ -72,7 +73,6 @@ class ComparisonWindow(QtWidgets.QMainWindow):
         std_errors = []
         significance = []
         for item in self.compare_model.data:
-            print(item)
             cell_line = item[1]
             experiment = item[0]
             concentrations = item[4]
@@ -80,14 +80,16 @@ class ComparisonWindow(QtWidgets.QMainWindow):
             concentrations_dict = {}
             for concentration in concentrations:
                 concentrations_dict[concentration] = []
-            plates = grab_plates(cell_line, experiment, concentrations_dict)
+            plates = grab_plates(cell_line, experiment)
             values = OrderedDict()
             file_grab_successful = True
             for concentration in concentrations:
                 values[concentration] = []
             for plate in plates:
                 try:
-                    df = pd.read_excel(plate[1], header=None)
+                    file_path = pathlib.Path.cwd()
+                    file_path = file_path.parent.parent.joinpath(plate[1])
+                    df = pd.read_excel(file_path, header=None)
 
                     coordinates = []
                     # Split the range down the : character
