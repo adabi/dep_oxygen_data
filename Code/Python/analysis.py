@@ -217,7 +217,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
                 index = self.plates_model.createIndex(self.plates_model.number_of_rows - 1, 1)
                 self.plates_model.setData(index, str(selected_file_tostore), role=QtCore.Qt.EditRole)
-
                 index = self.plates_model.createIndex(self.plates_model.number_of_rows - 2, 2)
                 self.plates_model.setData(index, range_literal, QtCore.Qt.EditRole)
 
