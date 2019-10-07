@@ -53,53 +53,25 @@ plot_and_save <- function(cmpnd, assay){
        x="Treatment (μg/ml)", y="LDH (Cell Leakage)", 
        color="Condition_Exposure Time")
   
-ggsave(file_path, device = "png", type = "cairo", width=10)
+ggsave(file_path, device = "png", width=10)
 }
 
-#Plot the linear regression for DEP
+
 plot_and_save("DEP", "LDH")
+plot_and_save("Ox66", "LDH")
+plot_and_save("DEP + Ox66", "LDH")
 
-df %>%
-  filter(compound=="DEP") %>%
-  mutate(group = factor(group, levels = c("Normoxia_24 Hours", "Hypoxia_24 Hours",
-                                            "Normoxia_48 Hours", "Hypoxia_48 Hours"))) %>%
-  arrange(group) %>% 
-  ggplot(mapping=aes(x=treatment, y=response, color=group)) +
-  geom_jitter(width=0.3, alpha= 0.5) +
-  stat_smooth(method="lm", se=FALSE) +
-  labs(title= "DEP - LDH for Human Astroglial Cells (SVGp12)",
-       x="Treatment (μg/ml)", y="LDH (Cell Leakage)",
-       color="Condition_Exposure Time")
-ggsave("../../Graphs/SVG/SVG_DEP_LDH_NS.png", device = "png", type = "cairo", width=6)
-
-#Plot the linear regression for Ox66
-df %>%
-  filter(compound=="Ox66") %>%
-  mutate(group = factor(group, levels = c("Normoxia_24 Hours", "Hypoxia_24 Hours",
-                                          "Normoxia_48 Hours", "Hypoxia_48 Hours"))) %>% 
-  ggplot(mapping=aes(x=treatment, y=response, color=group), width=18) +
-  geom_jitter(width=0.3, alpha= 0.5) +
-  stat_smooth(method="lm", se=FALSE) +
-  labs(title= "Ox66 - LDH for Human Astroglial Cells (SVGp12)",
-       x="Treatment (μg/ml)", y="LDH (Cell Leakage)", 
-       color="Condition_Exposure Time")
-
-ggsave("../../Graphs/SVG/SVG_Ox66_LDH_NS.png", device = "png", type = "cairo", width=6)
-
-#Plot the linear regression for 
 ```
 
-```{r}
-view(df %>% 
-  mutate(treatment = str_replace(treatment, "Blank", "0 ug/ml")) %>% 
-  mutate(treatment = str_replace(treatment, "20 ug/ml \\+ 50 ppm", "70 ug/ml")))
-```
 
 ```{r}
+#Function for finding the slope coefficient 
 find_mdl_coefficient <- function(x,y){
   coef(summary(lm(y~x)))[2,1]
 }
-find_mdl_coefficient_stderr <- function(x,y){
+
+#Function for finding the slope coefficient confidence interval
+find_mdl_coefficient_ce <- function(x,y){
   lin_mod <- lm(y~x)
   std_err <- coef(summary(lin_mod))[2,2]
   df <- length(residuals(lin_mod))
@@ -107,32 +79,25 @@ find_mdl_coefficient_stderr <- function(x,y){
   (crit_t * std_err)
 }
 
-gg_color_hue <- function(n) {
-hues = seq(15, 375, length = n + 1)
-hcl(h = hues, l = 65, c = 100)[1:n]
-}
-
 df_slopes <- 
-  df_scaled %>% 
+  df %>% 
   group_by(compound, group) %>% 
   summarise(slope = find_mdl_coefficient(treatment, response),
-            slope_err = find_mdl_coefficient_stderr(treatment,response)) %>% 
+            slope_err = find_mdl_coefficient_ce(treatment,response)) %>% 
   mutate(slope_min = slope-slope_err, slope_max=slope+slope_err) 
   
 df_slopes_dep <-
   df_slopes %>% 
-  filter(compound=="DEP") %>% 
+  filter(compound=="DEP + Ox66") %>% 
   mutate(group = factor(group, levels = c("Normoxia_24 Hours", "Hypoxia_24 Hours",
                                             "Normoxia_48 Hours", "Hypoxia_48 Hours"))) %>% 
   arrange(group)
 
-ggsave("../../Graphs/SVG/SVG_DEP_LDH_CE.png", device = "png", type = "cairo", height=3)
 
 
 
-color_hues <- gg_color_hue(nrow(df_slopes_dep))
 x_lines <- c(rbind(df_slopes_dep$slope_min, df_slopes_dep$slope_max))
-y_lines <- rep(seq_len(nrow(df_slopes_dep))/2, each=2)
+y_lines <- rep(seq(from = nrow(df_slopes_dep), to = 1, by=-1)/2, each=2)
 x_dots <- rep(df_slopes_dep$slope, each=2)
 group <- rep(df_slopes_dep$group, each = 2)
 df_lines <- 
@@ -142,31 +107,21 @@ ggplot(data=df_lines, mapping=aes(x=x_lines, y=y_lines, color=group)) +
   geom_line() + 
   geom_point(x=x_dots, color="black") +
   labs(x="Regression Slopes 95% Confidence Intervals", y="", color="Condition_Exposure Time",
-       title="Slope Confidence Intervals for SVGp12 dosed with DEP (LDH)") +
+       title="Slope Confidence Intervals for SVGp12 dosed with Ox66 (LDH)") +
   theme_bw() +
   theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(),
         panel.grid.major = element_blank(), panel.grid.minor = element_blank()) 
 
+ggsave("../../Graphs/SVG/SVG_DEP_Ox66_LDH_CE.png", device = "png", height=3)
 
 
 
-
-lnr_mdl.dep.normoxia.24 <- 
+lnr_mdl.ox66.48 <- 
   df_scaled %>%
-  filter(compound=="DEP", group=="Normoxia_24 Hours") %>% 
-  lm(data=., response~treatment)
+  filter(compound=="DEP + Ox66", group=="Normoxia_48 Hours" | group=="Hypoxia_48 Hours") %>% 
+  lm(data=., response~treatment*group)
 
-slope.normoxia.24 <- coef(summary(lnr_mdl.dep.normoxia.24))[2,1]
-stderr.normoxia.24 <- coef(summary(lnr_mdl.dep.normoxia.24))[2,2]
-
-lnr_mdl.dep.hypoxia.24 <- 
-  df_scaled %>%
-  filter(compound=="DEP", group=="Hypoxia_24 Hours") %>% 
-  group_by(treatment) %>% 
-  summarise(response = mean(response)) %>% 
-  lm(data=., response~treatment)
-
-summary(lnr_mdl.dep.normoxia.24)
+summary(lnr_mdl.ox66.48)
 ```
 
 ```{r}
