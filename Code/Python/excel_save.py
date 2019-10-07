@@ -77,7 +77,7 @@ class ExcelSaveWindow(QtWidgets.QMainWindow):
             item['save_list'].doubleClicked.connect(lambda index, x=item: self.move_items(
                 selection_model=x['save_selection_model'],
                 source_model=x['save_model'],
-                destination_model=x['availabe_model']))
+                destination_model=x['available_model']))
             item['delete_button'].clicked.connect(lambda state, x=item: self.move_items(
                 selection_model=x['save_selection_model'],
                 source_model=x['save_model'],

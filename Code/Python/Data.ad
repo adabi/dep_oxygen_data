@@ -250,7 +250,7 @@ cell_line="SVG"
 	experiment="13"
 	date="6/2/2019"
 	compounds="DEP + Ox66"
-	concentrations="Blank, 20 ug/ml, 50 ug/ml, 100 ug/ml"
+	concentrations="Blank, 20 ug/ml + 50 ppm, 50 ug/ml + 100 ppm, 100 ug/ml + 200 ppm"
 	exposure_time="48 Hours"
 	condition="Normoxia"
 	assay="LDH"
@@ -259,19 +259,19 @@ cell_line="SVG"
 		plate="1"
 		file="Data/LDH/LDH 6-2-19/SVG + DEP 0.45UM + Ox66 48HRS Normoxia LDH 6-2-19.xlsx"
 		range="B2:M9"
-		concentrations=[Triton-x]:[2],[Blank]:[6, 7],[20 ug/ml]:[5, 11],[50 ug/ml]:[8, 10],[100 ug/ml]:[4, 9]
+		concentrations=[Triton-x]:[2],[Blank]:[6, 7],[20 ug/ml]:[5, 11],[50 ug/ml]:[8, 10],[100 ug/ml]:[4, 9],[20 ug/ml + 50 ppm]:[5, 11],[50 ug/ml + 100 ppm]:[8, 10],[100 ug/ml + 200 ppm]:[4, 9]
 		}
 		{
 		plate="2"
 		file="Data/LDH/LDH 6-2-19/SVG + DEP 0.45UM + Ox66 48HRS Normoxia LDH 6-2-19.xlsx"
 		range="B12:M19"
-		concentrations=[Triton-x]:[2],[Blank]:[5, 9],[20 ug/ml]:[7, 11],[50 ug/ml]:[4, 10],[100 ug/ml]:[6, 8]
+		concentrations=[Triton-x]:[2],[Blank]:[5, 9],[20 ug/ml]:[7, 11],[50 ug/ml]:[4, 10],[100 ug/ml]:[6, 8],[20 ug/ml + 50 ppm]:[7, 11],[50 ug/ml + 100 ppm]:[4, 10],[100 ug/ml + 200 ppm]:[6, 8]
 		}
 		{
 		plate="3"
 		file="Data/LDH/LDH 6-2-19/SVG + DEP 0.45UM + Ox66 48HRS Normoxia LDH 6-2-19.xlsx"
 		range="B22:M30"
-		concentrations=[Triton-x]:[2],[Blank]:[4, 11],[20 ug/ml]:[6, 10],[50 ug/ml]:[5, 7],[100 ug/ml]:[8, 9]
+		concentrations=[Triton-x]:[2],[Blank]:[4, 11],[20 ug/ml]:[6, 10],[50 ug/ml]:[5, 7],[100 ug/ml]:[8, 9],[20 ug/ml + 50 ppm]:[6, 10],[50 ug/ml + 100 ppm]:[5, 7],[100 ug/ml + 200 ppm]:[8, 9]
 		}
 	}
 	{
