@@ -25,15 +25,15 @@ scaling_lst <-
 
 df_scaled <- 
   lapply(names(scaling_lst), function(x){
-    blank_mean <- 
+    scale_mean <- 
       scaling_lst[[x]] %>% 
-      filter(group == x, treatment ==0) %>% 
+      filter(group == x, treatment == 0) %>% 
       select(response) %>% 
       pull %>% 
       mean
     
     scaling_lst[[x]] %>% 
-      mutate(response = response / blank_mean)
+      mutate(response = ((response -scale_mean)/sd(response)))
   }) %>% 
   bind_rows() %>% 
   separate(group, into=c("compound", "group"), sep=",")
@@ -41,7 +41,7 @@ df_scaled <-
 plot_and_save <- function(cmpnd, assay){
   title <- paste(cmpnd, " - ", assay, " for Human Astroglial Cells (SVGp12)", sep="")
   file_path <- paste("../../Graphs/SVG/SVG_", cmpnd, "_", assay, "N_NS.png", sep="")
-  df %>%
+  df_scaled %>%
   filter(compound==cmpnd) %>%
   mutate(group = factor(group, levels = c("Normoxia_24 Hours", "Hypoxia_24 Hours",
                                             "Normoxia_48 Hours", "Hypoxia_48 Hours"))) %>% 
@@ -53,7 +53,7 @@ plot_and_save <- function(cmpnd, assay){
        x="Treatment (μg/ml)", y="LDH (Cell Leakage)", 
        color="Condition_Exposure Time")
   
-ggsave(file_path, device = "png", width=10)
+ggsave(file_path, device = "png", width=10, type="cairo")
 }
 
 
@@ -79,40 +79,46 @@ find_mdl_coefficient_ce <- function(x,y){
   (crit_t * std_err)
 }
 
-df_slopes <- 
-  df %>% 
-  group_by(compound, group) %>% 
-  summarise(slope = find_mdl_coefficient(treatment, response),
-            slope_err = find_mdl_coefficient_ce(treatment,response)) %>% 
-  mutate(slope_min = slope-slope_err, slope_max=slope+slope_err) 
+plot_ces <- function(cmpnd, assay){
+  df_slopes <- 
+    df_scaled %>% 
+    group_by(compound, group) %>% 
+    summarise(slope = find_mdl_coefficient(treatment, response),
+              slope_err = find_mdl_coefficient_ce(treatment,response)) %>% 
+    mutate(slope_min = slope-slope_err, slope_max=slope+slope_err) 
+    
+  df_slopes_dep <-
+    df_slopes %>% 
+    filter(compound== cmpnd) %>% 
+    mutate(group = factor(group, levels = c("Normoxia_24 Hours", "Hypoxia_24 Hours",
+                                              "Normoxia_48 Hours", "Hypoxia_48 Hours"))) %>% 
+    arrange(group)
   
-df_slopes_dep <-
-  df_slopes %>% 
-  filter(compound=="DEP + Ox66") %>% 
-  mutate(group = factor(group, levels = c("Normoxia_24 Hours", "Hypoxia_24 Hours",
-                                            "Normoxia_48 Hours", "Hypoxia_48 Hours"))) %>% 
-  arrange(group)
-
-
-
-
-x_lines <- c(rbind(df_slopes_dep$slope_min, df_slopes_dep$slope_max))
-y_lines <- rep(seq(from = nrow(df_slopes_dep), to = 1, by=-1)/2, each=2)
-x_dots <- rep(df_slopes_dep$slope, each=2)
-group <- rep(df_slopes_dep$group, each = 2)
-df_lines <- 
-  data.frame(x=x_lines, y=y_lines, group=group) 
+  title <- sprintf("Slope Confidence Intervals for SVGp12 dosed with %s (%s)", cmpnd, assay)
+  file_name <- sprintf("../../Graphs/SVG/SVG_%s_%s_CE.png", cmpnd, assay)
+  x_lines <- c(rbind(df_slopes_dep$slope_min, df_slopes_dep$slope_max))
+  y_lines <- rep(seq(from = nrow(df_slopes_dep), to = 1, by=-1)/2, each=2)
+  x_dots <- rep(df_slopes_dep$slope, each=2)
+  group <- rep(df_slopes_dep$group, each = 2)
+  df_lines <- 
+    data.frame(x=x_lines, y=y_lines, group=group) 
+    
+  ggplot(data=df_lines, mapping=aes(x=x_lines, y=y_lines, color=group)) + 
+    geom_line() + 
+    geom_point(x=x_dots, color="black") +
+    labs(x="Regression Slopes 95% Confidence Intervals", y="", color="Condition_Exposure Time",
+         title=title) +
+    theme_bw() +
+    theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(),
+          panel.grid.major = element_blank(), panel.grid.minor = element_blank()) 
   
-ggplot(data=df_lines, mapping=aes(x=x_lines, y=y_lines, color=group)) + 
-  geom_line() + 
-  geom_point(x=x_dots, color="black") +
-  labs(x="Regression Slopes 95% Confidence Intervals", y="", color="Condition_Exposure Time",
-       title="Slope Confidence Intervals for SVGp12 dosed with Ox66 (LDH)") +
-  theme_bw() +
-  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(),
-        panel.grid.major = element_blank(), panel.grid.minor = element_blank()) 
+  ggsave(file_name, device = "png", height=3)
+    
+}
 
-ggsave("../../Graphs/SVG/SVG_DEP_Ox66_LDH_CE.png", device = "png", height=3)
+plot_ces("DEP", "LDH")
+plot_ces("Ox66", "LDH")
+plot_ces("DEP + Ox66", "LDH")
 
 
 
