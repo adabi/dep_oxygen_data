@@ -2,6 +2,7 @@
 
 ```{r}
 library(tidyverse)
+library(gridExtra)
 file_path= "../../Data/Compiled/SVG_LDH_ALL.csv"
 df <- read.csv(file_path)
 # replace blanks with 0 ug/ml and split the treatment into numbers and units
@@ -51,15 +52,20 @@ plot_and_save <- function(cmpnd, assay){
   stat_smooth(method="lm", se=FALSE) +
   labs(title= title,
        x="Treatment (μg/ml)", y="LDH (Cell Leakage)", 
-       color="Condition_Exposure Time")
+       color="Condition_Exposure Time") +
+    theme_bw(base_size= 5)
   
-ggsave(file_path, device = "png", width=10, type="cairo")
+#ggsave(file_path, device = "png", width=10, type="cairo")
 }
 
 
-plot_and_save("DEP", "LDH")
-plot_and_save("Ox66", "LDH")
-plot_and_save("DEP + Ox66", "LDH")
+p1<- plot_and_save("DEP", "LDH")
+p2<- plot_and_save("Ox66", "LDH")
+p3<- plot_and_save("DEP + Ox66", "LDH")
+
+g <- arrangeGrob(p1,p2,p3, nrow = 3)
+
+ggsave("../../Graphs/compiled_trends.png", g, device="png")
 
 ```
 
@@ -131,28 +137,100 @@ summary(lnr_mdl.ox66.48)
 ```
 
 ```{r}
-tail <- abs(qt(0.01/2, 190)) * stderr.normoxia.24
-summary(lnr_mdl.dep.normoxia.24)
-sd(resids)
-(slope.normoxia.24-tail) < slope.hypoxia.24 & slope.hypoxia.24 < (slope.normoxia.24+tail)
-slope.hypoxia.24
-ggplot(height=0.02) + 
-  ylim(0,0.025) +
-  geom_segment(aes(x=(slope.normoxia.24-tail), xend=slope.normoxia.24+tail), y=0.01,yend=0.01) +
-  geom_point(aes(x=slope.normoxia.24, y=0.01)) + 
-  geom_point(aes(x=slope.hypoxia.24, y=0.02))
+find_mdl_coefficient_ce <- function(x,y){
+  lin_mod <- lm(y~x)
+  std_err <- coef(summary(lin_mod))[2,2]
+  df <- length(residuals(lin_mod))
+  crit_t <- abs(qt(0.05/2, df))
+  c(std_err, crit_t * std_err)
+}
+
+ox66.normoxia.24_df <-
+  df_scaled %>% 
+  filter(compound == "Ox66", group=="Normoxia_24 Hours") 
+
+ox66.normoxia.24 <- find_mdl_coefficient(ox66.normoxia.24_df$treatment, ox66.normoxia.24_df$response)
+ox66.normoxia.24.ce <- find_mdl_coefficient_ce (ox66.normoxia.24_df$treatment, ox66.normoxia.24_df$response)
+
+dep.normoxia.24_df <-
+  df_scaled %>% 
+  filter(compound == "DEP", group=="Normoxia_24 Hours") 
+
+dep.normoxia.24 <- find_mdl_coefficient(dep.normoxia.24_df$treatment, ox66.normoxia.24_df$response)
+ox66.normoxia.24.ce <- find_mdl_coefficient_ce (dep.normoxia.24_df$treatment, ox66.normoxia.24_df$response)
+
+compare_coefs <- function(condition, exposure_time){
+  grp<- paste(condition, "_", exposure_time, sep="")
+  title <- sprintf("Comparison of Additive Slopes for %s at %s", exposure_time, condition)
+  file_path <- sprintf("../../Graphs/SVG/compare_%s_%s.png", exposure_time,condition)
+  ox66_df <- df_scaled %>% 
+  filter(compound == "Ox66", group==grp) 
+  coef.ox66 <-  find_mdl_coefficient(ox66_df$treatment, ox66_df$response)
+  se.ox66 <- find_mdl_coefficient_ce(ox66_df$treatment, ox66_df$response)[1]
+
+  
+  dep_df <- 
+    df_scaled %>% 
+    filter(compound == "DEP", group==grp) 
+  
+  coef.dep <-  find_mdl_coefficient(dep_df$treatment, dep_df$response)
+  se.dep <- find_mdl_coefficient_ce(dep_df$treatment, dep_df$response)[1]
+  
+  response.ox66 <- 
+    df_scaled %>% 
+    filter(compound == "Ox66", group==grp) %>% 
+    group_by(treatment) %>% 
+    summarise(response = mean(response)) %>% 
+    select(response) %>% 
+    pull
+  
+  response.dep <-
+    df_scaled %>%
+    filter(compound == "DEP", group==grp) %>% 
+    group_by(treatment) %>% 
+    summarise(response = mean(response)) %>% 
+    select(response) %>% 
+    pull
+
+
+  
+  dep_ox66_df <- df_scaled %>% 
+  filter(compound == "DEP + Ox66", group==grp) 
+  coef.dep.ox66 <-  find_mdl_coefficient(dep_ox66_df$treatment, dep_ox66_df$response)
+  se.dep.ox66 <- find_mdl_coefficient_ce(dep_ox66_df$treatment, dep_ox66_df$response)[1]
+
+  corrfact <- cor(response.dep, response.ox66)
+  print(corrfact)
+  se.combined <- sqrt((se.dep)^2 + (se.ox66)^2 + 2*corrfact)
+  coef.combined <- coef.ox66 + coef.dep
+  
+  x_lines <-
+    c(coef.combined - 1.96*se.combined, coef.combined + 1.96*se.combined,
+      coef.dep.ox66 - 1.96*se.dep.ox66, coef.dep.ox66 + 1.96*se.dep.ox66)
+  y_lines <- c(1.5,1.5,1,1)
+  groups <- c("Combined Calculated", "Combined Calculated", "Combined Experimental", "Combined Experimental")
+  
+  df_lines2 <- data.frame(x=x_lines, y=y_lines, group = groups) %>% 
+  
+  print(c(coef.combined + 1.96*se.combined, coef.combined + 1.96*se.combined))
+  ggplot(data=,df_lines2, mapping= aes(x=x, y=y, color=group)) +
+    geom_line(aes(group=group)) +
+    theme_bw(base_size = 5) +
+    theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(),
+          panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+    geom_point(aes(x=c(coef.combined, coef.combined, coef.dep.ox66, coef.dep.ox66), y=c(1.5,1.5,1,1), color=group)) +
+    ylim(1,1.5) +
+    labs(title = title, x="Regression Slopes 95% Confidence Intervals", y="", color="Group") 
+    
+ 
+  ggsave(file_path, device = 'png', height=2, width=5)
+}
+
+compare_coefs("Hypoxia", "48 Hours")
 ```
 
 ```{r}
 
-df_scaled_witherr <- df_scaled %>%
-  filter(compound=="Ox66", group=="Hypoxia_48 Hours") %>% 
-  group_by(treatment) %>% 
-  summarise(stderr_ = sd(response)/(sqrt(length(response))), response= mean(response)) 
-
-
-ggplot(data=df_scaled_witherr, mapping=aes(x=treatment, y=response)) +
-  geom_point() +
-  geom_errorbar(aes(ymin=response-stderr_, ymax=response+stderr_))
 ```
+
 
