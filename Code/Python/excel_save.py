@@ -146,7 +146,7 @@ class ExcelSaveWindow(QtWidgets.QMainWindow):
                         else:
                             scaling_factor = np.nanmax(df)
 
-                        df_scaled = df - scaling_factor
+                        df_scaled = (df - scaling_factor)/np.nanstd(df) + 1
                         for concentration in concentrations:
                             rows = plate[3][concentration]
                             for row in rows:

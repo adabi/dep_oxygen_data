@@ -83,31 +83,31 @@ df <-
   separate(treatment, into=c("treatment", "units"), sep=" ") %>% 
   mutate(treatment = as.numeric(treatment)) %>% 
   select(-units) %>% 
-  unite(group, condition, exposure_time, sep="_")
+  unite(group, condition, exposure_time, sep=" - ")
 
 # Normalize all the values so that the mean of the 0 treatment is 1 and the sd is 1
 
-scaling_lst <- 
-  df %>% 
-  unite(group, compound, group, sep=",") %>% 
-  split(.$group)
-
-
-df_scaled <- 
-  lapply(names(scaling_lst), function(x){
-    scale_mean <- 
-      scaling_lst[[x]] %>% 
-      filter(group == x, treatment == 0) %>% 
-      select(response) %>% 
-      pull %>% 
-      mean
-    
-    scaling_lst[[x]] %>% 
-      mutate(response = ((response -scale_mean)/sd(response)) + 1)
-  }) %>% 
-  bind_rows() %>% 
-  separate(group, into=c("compound", "group"), sep=",")
-
+# scaling_lst <- 
+#   df %>% 
+#   unite(group, compound, group, sep=",") %>% 
+#   split(.$group)
+# 
+# 
+# df_scaled <- 
+#   lapply(names(scaling_lst), function(x){
+#     scale_mean <- 
+#       scaling_lst[[x]] %>% 
+#       filter(group == x, treatment == 0) %>% 
+#       select(response) %>% 
+#       pull %>% 
+#       mean
+#     
+#     scaling_lst[[x]] %>% 
+#       mutate(response = ((response - scale_mean)/sd(response)) + 1)
+#   }) %>% 
+#   bind_rows() %>% 
+#   separate(group, into=c("compound", "group"), sep=",")
+df_scaled <- df
 
 
 
@@ -120,13 +120,17 @@ df_scaled <-
 
 df_means <-
   df_scaled %>% 
-  filter(compound == "DEP") %>% 
-  mutate(treatment = factor(treatment, levels=c("0", "20","50", "100"))) %>% 
-  arrange(group, treatment) %>% 
+  filter(compound == 'DEP + Ox66') %>%
   group_by(group, treatment) %>% 
   summarise(err = sd(response)/sqrt(length(response)), response=mean(response)) %>% 
   ungroup %>% 
-  mutate(group = factor(group))
+  mutate(treatment = factor(treatment)) %>% 
+  mutate(group = factor(group, levels=c('Normoxia - 24 Hours', 'Hypoxia - 24 Hours', 
+                                        'Normoxia - 48 Hours', 'Hypoxia - 48 Hours'))) %>% 
+  arrange(group, treatment)
+
+
+
 
 
 df_means$y_err_max <- df_means$response + df_means$err
@@ -135,26 +139,25 @@ max_height = max(df_means$y_err_max)
 unit <- max_height / 25
 bar_width = 0.5/3
 
-groups <- unique(df_means$group)
-treatments <- unique(df_means$treatment)
+groups <- unique(as.character(df_means$group))
+treatments <- unique(as.character(df_means$treatment))
 
-plt <- ggplot(data=df_means, mapping = aes(y=response, x=group, fill=treatment)) + 
+plt <- ggplot(data=df_means, mapping = aes(y=response, x=group, fill=treatment), height=10) + 
     geom_bar(position="dodge", stat="identity", width=0.5) + 
     geom_errorbar(aes(ymin=y_err_min, ymax=y_err_max), width=.2, position=position_dodge(.5)) + 
     theme_bw(base_size = 11) + 
-    labs(x="", y="LDH (Cell Damage)", fill = "Treatment (μg/ml)") 
+    labs(x="", y="LDH (Cell Damage)", fill = "Treatment (μg/ml)", title="LDH Across Groups for SVGp12 - DEP + Ox66") 
 
 for (i in 1:length(groups)){
   grp <- as.character(groups[i])
   
   df_group <- df_scaled %>% 
-    filter(compound == "DEP", group == grp)
+    filter(compound == 'DEP + Ox66', group == grp)
   
   df_group_means <- df_means %>% 
     filter(group == grp)
   
   howell_tst <- games.howell(as.character(df_group$treatment), df_group$response)
-  view(howell_tst)
   
   group_starting_x <- i - (length(treatments) * bar_width)/2
   x_values = list()
@@ -170,7 +173,6 @@ for (i in 1:length(groups)){
         pull %>% 
         max
       
-      print(max_treatment_height)
       x_values <- c(group_starting_x + j*bar_width - bar_width/2 + bar_width/10, 
                     group_starting_x + j*bar_width - bar_width/2 + bar_width/10, 
                     group_starting_x + k*bar_width - bar_width/2 - bar_width/10, 
@@ -215,41 +217,24 @@ print(plt)
 
 
 ```{r}
-library(tidyverse)
-library(gridExtra)
-file_path= "../../Data/Compiled/SVG_LDH_ALL.csv"
-df <- read.csv(file_path)
-# replace blanks with 0 ug/ml and split the treatment into numbers and units
-df <- 
-  df %>% 
-  mutate(treatment = str_replace(treatment, "Blank", "0 ug/ml"),
-         treatment = str_replace(treatment, "20 ug/ml \\+ 50 ppm", "70 ug/ml"),
-         treatment = str_replace(treatment, "50 ug/ml \\+ 100 ppm", "150 ug/ml"),
-         treatment = str_replace(treatment, "100 ug/ml \\+ 200 ppm", "300 ug/ml")) %>% 
-  separate(treatment, into=c("treatment", "units"), sep=" ") %>% 
-  mutate(treatment = as.numeric(treatment)) %>% 
-  unite(group, condition, exposure_time, sep="_")
-
-
-
 
 plot_and_save <- function(cmpnd, assay){
-  title <- paste(cmpnd, " - ", assay, " for Human Astroglial Cells (SVGp12)", sep="")
-  file_path <- paste("../../Graphs/SVG/SVG_", cmpnd, "_", assay, "N_NS.png", sep="")
+  title <- sprintf("%s for Human Astroglial Cells (SVGp12) - %s", assay, cmpnd)
+  file_path <- sprintf("../../Graphs/SVG/%s_%s.png", cmpnd, assay)
   df_scaled %>%
   filter(compound==cmpnd) %>%
-  mutate(group = factor(group, levels = c("Normoxia_24 Hours", "Hypoxia_24 Hours",
-                                            "Normoxia_48 Hours", "Hypoxia_48 Hours"))) %>% 
+  mutate(group = factor(group, levels = c("Normoxia - 24 Hours", "Hypoxia - 24 Hours",
+                                            "Normoxia - 48 Hours", "Hypoxia - 48 Hours"))) %>% 
   arrange(group) %>% 
   ggplot(mapping=aes(x=treatment, y=response, color=group)) +
   geom_jitter(width=0.3, alpha= 0.5) +
   stat_smooth(method="lm", se=FALSE) +
   labs(title= title,
        x="Treatment (μg/ml)", y="LDH (Cell Leakage)", 
-       color="Condition_Exposure Time") +
-    theme_bw(base_size= 5)
+       color="Condition - Exposure Time") +
+    theme_bw(base_size= 10)
   
-#ggsave(file_path, device = "png", width=10, type="cairo")
+ggsave(file_path, device = "png", width=8, type="cairo", height = 4.5)
 }
 
 
@@ -257,9 +242,9 @@ p1<- plot_and_save("DEP", "LDH")
 p2<- plot_and_save("Ox66", "LDH")
 p3<- plot_and_save("DEP + Ox66", "LDH")
 
-g <- arrangeGrob(p1,p2,p3, nrow = 3)
+#g <- arrangeGrob(p1,p2,p3, nrow = 3)
 
-ggsave("../../Graphs/compiled_trends.png", g, device="png")
+#ggsave("../../Graphs/compiled_trends.png", g, device="png", type="cairo")
 
 ```
 
@@ -319,16 +304,8 @@ plot_ces <- function(cmpnd, assay){
 plot_ces("DEP", "LDH")
 plot_ces("Ox66", "LDH")
 plot_ces("DEP + Ox66", "LDH")
-
-
-
-lnr_mdl.ox66.48 <- 
-  df_scaled %>%
-  filter(compound=="DEP + Ox66", group=="Normoxia_48 Hours" | group=="Hypoxia_48 Hours") %>% 
-  lm(data=., response~treatment*group)
-
-summary(lnr_mdl.ox66.48)
 ```
+
 
 ```{r}
 find_mdl_coefficient_ce <- function(x,y){
@@ -338,20 +315,6 @@ find_mdl_coefficient_ce <- function(x,y){
   crit_t <- abs(qt(0.05/2, df))
   c(std_err, crit_t * std_err)
 }
-
-ox66.normoxia.24_df <-
-  df_scaled %>% 
-  filter(compound == "Ox66", group=="Normoxia_24 Hours") 
-
-ox66.normoxia.24 <- find_mdl_coefficient(ox66.normoxia.24_df$treatment, ox66.normoxia.24_df$response)
-ox66.normoxia.24.ce <- find_mdl_coefficient_ce (ox66.normoxia.24_df$treatment, ox66.normoxia.24_df$response)
-
-dep.normoxia.24_df <-
-  df_scaled %>% 
-  filter(compound == "DEP", group=="Normoxia_24 Hours") 
-
-dep.normoxia.24 <- find_mdl_coefficient(dep.normoxia.24_df$treatment, ox66.normoxia.24_df$response)
-ox66.normoxia.24.ce <- find_mdl_coefficient_ce (dep.normoxia.24_df$treatment, ox66.normoxia.24_df$response)
 
 compare_coefs <- function(condition, exposure_time){
   grp<- paste(condition, "_", exposure_time, sep="")
@@ -395,7 +358,7 @@ compare_coefs <- function(condition, exposure_time){
 
   corrfact <- cor(response.dep, response.ox66)
   print(corrfact)
-  se.combined <- sqrt((se.dep)^2 + (se.ox66)^2 + 2*corrfact)
+  se.combined <- sqrt((se.dep)^2 + (se.ox66)^2)
   coef.combined <- coef.ox66 + coef.dep
   
   x_lines <-
@@ -421,10 +384,7 @@ compare_coefs <- function(condition, exposure_time){
 }
 
 compare_coefs("Hypoxia", "48 Hours")
-```
-
-```{r}
-
+compare_coefs("Hypoxia", "24 Hours")
 ```
 
 
