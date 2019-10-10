@@ -120,7 +120,7 @@ df_scaled <- df
 
 df_means <-
   df_scaled %>% 
-  filter(compound == 'DEP + Ox66') %>%
+  filter(compound == 'DEP') %>%
   group_by(group, treatment) %>% 
   summarise(err = sd(response)/sqrt(length(response)), response=mean(response)) %>% 
   ungroup %>% 
@@ -146,18 +146,24 @@ plt <- ggplot(data=df_means, mapping = aes(y=response, x=group, fill=treatment),
     geom_bar(position="dodge", stat="identity", width=0.5) + 
     geom_errorbar(aes(ymin=y_err_min, ymax=y_err_max), width=.2, position=position_dodge(.5)) + 
     theme_bw(base_size = 11) + 
-    labs(x="", y="LDH (Cell Damage)", fill = "Treatment (μg/ml)", title="LDH Across Groups for SVGp12 - DEP + Ox66") 
+    labs(x="", y="LDH (Cell Damage)", fill = "Treatment (μg/ml)", title="LDH Across Groups for SVGp12 - DEP") 
 
 for (i in 1:length(groups)){
   grp <- as.character(groups[i])
   
   df_group <- df_scaled %>% 
-    filter(compound == 'DEP + Ox66', group == grp)
+    filter(compound == 'DEP', group == grp)
   
   df_group_means <- df_means %>% 
     filter(group == grp)
   
+  # Perform the howell_tst for group comparisons
   howell_tst <- games.howell(as.character(df_group$treatment), df_group$response)
+  
+  # Then oblieterate the statistical power of the test by implementing Šidák familywise correction 
+  n_comparisons <- nrow(howell_tst)*length(groups)
+  alpha_corrected <- 1-(1-0.05)^(1/n_comparisons)
+  print(alpha_corrected)
   
   group_starting_x <- i - (length(treatments) * bar_width)/2
   x_values = list()
@@ -196,9 +202,11 @@ for (i in 1:length(groups)){
         select(p) %>% 
         pull 
       
+     
+      
       # A length check since R seems to insist that some of the p values be stored as numeric(0), producing a NULL as the output of the if statement. YAY R!
       if (length(p_val) != 0){
-        if (p_val < 0.05) {
+        if (p_val < alpha_corrected) {
            lbl <- "*"
         } else {
           lbl <- "n.s."
@@ -217,9 +225,9 @@ print(plt)
 
 
 ```{r}
-
+# Fit linear regression and 
 plot_and_save <- function(cmpnd, assay){
-  title <- sprintf("%s for Human Astroglial Cells (SVGp12) - %s", assay, cmpnd)
+  title <- sprintf("LDH Across Groups for Human Astroglial Cells (SVGp12) - %s", assay, cmpnd)
   file_path <- sprintf("../../Graphs/SVG/%s_%s.png", cmpnd, assay)
   df_scaled %>%
   filter(compound==cmpnd) %>%
@@ -275,13 +283,38 @@ plot_ces <- function(cmpnd, assay){
   df_slopes_dep <-
     df_slopes %>% 
     filter(compound== cmpnd) %>% 
-    mutate(group = factor(group, levels = c("Normoxia_24 Hours", "Hypoxia_24 Hours",
-                                              "Normoxia_48 Hours", "Hypoxia_48 Hours"))) %>% 
+    mutate(group = factor(group, levels = c("Normoxia - 24 Hours", "Hypoxia - 24 Hours",
+                                              "Normoxia - 48 Hours", "Hypoxia - 48 Hours"))) %>% 
     arrange(group)
   
-  title <- sprintf("Slope Confidence Intervals for SVGp12 dosed with %s (%s)", cmpnd, assay)
+  #Calculate the z score for the different between hypoxia and normoxia at 24 hours
+  twentyfour.dif.z <- 
+    df_slopes_dep %>% 
+    filter(group == 'Normoxia - 24 Hours' | group == 'Hypoxia - 24 Hours') %>% 
+    summarise(z_val = diff(slope) / sqrt(sum(slope_err^2))) %>% 
+    select(z_val) %>% 
+    pull
+  
+  #Calculate the p-vale for that score
+  twentyfour.df.p <- pnorm(abs(twentyfour.dif.z), lower.tail = FALSE) * 2
+
+  
+  #Calculate the z score for the different between hypoxia and normoxia at 48 hours
+  fortyeight.dif.z <- 
+    df_slopes_dep %>% 
+    filter(group == 'Normoxia - 48 Hours' | group == 'Hypoxia - 48 Hours') %>% 
+    summarise(z_val = diff(slope) / sqrt(sum(slope_err^2))) %>% 
+    select(z_val) %>% 
+    pull
+  
+  #Calculate the p-vale for that score
+  fortyeight.df.p <- pnorm(abs(fortyeight.dif.z), lower.tail = FALSE) * 2
+
+  
+  title <- sprintf("Slope Confidence Intervals for SVGp12 - %s (%s)", cmpnd, assay)
   file_name <- sprintf("../../Graphs/SVG/SVG_%s_%s_CE.png", cmpnd, assay)
   x_lines <- c(rbind(df_slopes_dep$slope_min, df_slopes_dep$slope_max))
+  x_pvals <- max(x_lines[])
   y_lines <- rep(seq(from = nrow(df_slopes_dep), to = 1, by=-1)/2, each=2)
   x_dots <- rep(df_slopes_dep$slope, each=2)
   group <- rep(df_slopes_dep$group, each = 2)
@@ -318,10 +351,12 @@ find_mdl_coefficient_ce <- function(x,y){
 
 compare_coefs <- function(condition, exposure_time){
   grp<- paste(condition, "_", exposure_time, sep="")
-  title <- sprintf("Comparison of Additive Slopes for %s at %s", exposure_time, condition)
+  grp <- sprintf('%s - %s', condition, exposure_time)
+  title <- sprintf("Comparison of Additive Slopes for SVGp12 - %s at %s", exposure_time, condition)
   file_path <- sprintf("../../Graphs/SVG/compare_%s_%s.png", exposure_time,condition)
   ox66_df <- df_scaled %>% 
   filter(compound == "Ox66", group==grp) 
+  
   coef.ox66 <-  find_mdl_coefficient(ox66_df$treatment, ox66_df$response)
   se.ox66 <- find_mdl_coefficient_ce(ox66_df$treatment, ox66_df$response)[1]
 
@@ -349,15 +384,11 @@ compare_coefs <- function(condition, exposure_time){
     select(response) %>% 
     pull
 
-
-  
   dep_ox66_df <- df_scaled %>% 
   filter(compound == "DEP + Ox66", group==grp) 
   coef.dep.ox66 <-  find_mdl_coefficient(dep_ox66_df$treatment, dep_ox66_df$response)
   se.dep.ox66 <- find_mdl_coefficient_ce(dep_ox66_df$treatment, dep_ox66_df$response)[1]
 
-  corrfact <- cor(response.dep, response.ox66)
-  print(corrfact)
   se.combined <- sqrt((se.dep)^2 + (se.ox66)^2)
   coef.combined <- coef.ox66 + coef.dep
   
@@ -368,8 +399,7 @@ compare_coefs <- function(condition, exposure_time){
   groups <- c("Combined Calculated", "Combined Calculated", "Combined Experimental", "Combined Experimental")
   
   df_lines2 <- data.frame(x=x_lines, y=y_lines, group = groups) %>% 
-  
-  print(c(coef.combined + 1.96*se.combined, coef.combined + 1.96*se.combined))
+
   ggplot(data=,df_lines2, mapping= aes(x=x, y=y, color=group)) +
     geom_line(aes(group=group)) +
     theme_bw(base_size = 5) +
@@ -383,8 +413,12 @@ compare_coefs <- function(condition, exposure_time){
   ggsave(file_path, device = 'png', height=2, width=5)
 }
 
-compare_coefs("Hypoxia", "48 Hours")
+compare_coefs("Normoxia", "24 Hours")
+compare_coefs("Normoxia", "48 Hours")
 compare_coefs("Hypoxia", "24 Hours")
+compare_coefs("Hypoxia", "48 Hours")
+
 ```
+
 
 
