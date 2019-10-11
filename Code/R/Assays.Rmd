@@ -150,60 +150,60 @@ plt <- ggplot(data=df_means, mapping = aes(y=response, x=group, fill=treatment),
 
 for (i in 1:length(groups)){
   grp <- as.character(groups[i])
-  
-  df_group <- df_scaled %>% 
+
+  df_group <- df_scaled %>%
     filter(compound == 'DEP', group == grp)
-  
-  df_group_means <- df_means %>% 
+
+  df_group_means <- df_means %>%
     filter(group == grp)
-  
+
   # Perform the howell_tst for group comparisons
   howell_tst <- games.howell(as.character(df_group$treatment), df_group$response)
-  
-  # Then oblieterate the statistical power of the test by implementing Šidák familywise correction 
+
+  # Then oblieterate the statistical power of the test by implementing Šidák familywise correction
   n_comparisons <- nrow(howell_tst)*length(groups)
   alpha_corrected <- 1-(1-0.05)^(1/n_comparisons)
   print(alpha_corrected)
-  
+
   group_starting_x <- i - (length(treatments) * bar_width)/2
   x_values = list()
   y_offset <- 0
   highest_treatment_in_group <- max(df_group_means$y_err_max)
   for (j in 1:(length(treatments) -1)){
     for (k in (j + 1):length(treatments)){
-      
+
       max_treatment_height <-
-        df_group_means %>% 
-        filter(treatment == treatments[j] | treatment == treatments[k]) %>% 
-        select(y_err_max) %>% 
-        pull %>% 
+        df_group_means %>%
+        filter(treatment == treatments[j] | treatment == treatments[k]) %>%
+        select(y_err_max) %>%
+        pull %>%
         max
-      
-      x_values <- c(group_starting_x + j*bar_width - bar_width/2 + bar_width/10, 
-                    group_starting_x + j*bar_width - bar_width/2 + bar_width/10, 
-                    group_starting_x + k*bar_width - bar_width/2 - bar_width/10, 
+
+      x_values <- c(group_starting_x + j*bar_width - bar_width/2 + bar_width/10,
+                    group_starting_x + j*bar_width - bar_width/2 + bar_width/10,
+                    group_starting_x + k*bar_width - bar_width/2 - bar_width/10,
                     group_starting_x + k*bar_width - bar_width/2 - bar_width/10)
-      
-      
+
+
       if (k-j ==1) {
         y_pos <- max_treatment_height + 2 * unit
       } else {
-        y_pos <- highest_treatment_in_group + 2*unit*(j - 1 + k - 1) 
+        y_pos <- highest_treatment_in_group + 2*unit*(j - 1 + k - 1)
       }
-      
+
       y_values <- c(y_pos-unit, y_pos, y_pos, y_pos-unit)
       x_text <- (group_starting_x + j*bar_width - bar_width/2 + bar_width/10 + group_starting_x + k*bar_width - bar_width/2 - bar_width/10)/2
       y_text <- y_pos + 0.75*unit
       df_line <- data.frame(x=x_values,y=y_values, treatment = rep(c('0'), 2))
       treatments_conc <- paste(treatments[j], treatments[k], sep=" : ")
-      p_val <- 
-        howell_tst %>% 
-        filter(groups == treatments_conc) %>% 
-        select(p) %>% 
-        pull 
-      
-     
-      
+      p_val <-
+        howell_tst %>%
+        filter(groups == treatments_conc) %>%
+        select(p) %>%
+        pull
+
+
+
       # A length check since R seems to insist that some of the p values be stored as numeric(0), producing a NULL as the output of the if statement. YAY R!
       if (length(p_val) != 0){
         if (p_val < alpha_corrected) {
@@ -214,7 +214,7 @@ for (i in 1:length(groups)){
       } else {
         lbl <- "n.s."
       }
-    
+
       plt <- plt + geom_line(data=df_line, aes(x=x,y=y)) + annotate("text", label=lbl, x=x_text, y=y_text, color="black", size=3)
     }
   }
@@ -260,12 +260,12 @@ p3<- plot_and_save("DEP + Ox66", "LDH")
 ```{r}
 #Function for finding the slope coefficient 
 find_mdl_coefficient <- function(x,y){
-  coef(summary(lm(y~x)))[2,1]
+  coef(summary(lm(log10(y)~x)))[2,1]
 }
 
 #Function for finding the slope coefficient confidence interval
 find_mdl_coefficient_ce <- function(x,y){
-  lin_mod <- lm(y~x)
+  lin_mod <- lm(log10(y)~x)
   std_err <- coef(summary(lin_mod))[2,2]
   df <- length(residuals(lin_mod))
   crit_t <- abs(qt(0.05/2, df))
@@ -286,43 +286,53 @@ plot_ces <- function(cmpnd, assay){
     mutate(group = factor(group, levels = c("Normoxia - 24 Hours", "Hypoxia - 24 Hours",
                                               "Normoxia - 48 Hours", "Hypoxia - 48 Hours"))) %>% 
     arrange(group)
-  
+
   #Calculate the z score for the different between hypoxia and normoxia at 24 hours
   twentyfour.dif.z <- 
     df_slopes_dep %>% 
     filter(group == 'Normoxia - 24 Hours' | group == 'Hypoxia - 24 Hours') %>% 
-    summarise(z_val = diff(slope) / sqrt(sum(slope_err^2))) %>% 
-    select(z_val) %>% 
-    pull
+    summarise(z_val = diff(slope) / sqrt(sum(slope_err^2)), pval_x = mean(slope)) 
+ 
   
   #Calculate the p-vale for that score
-  twentyfour.df.p <- pnorm(abs(twentyfour.dif.z), lower.tail = FALSE) * 2
+  twentyfour.df.p <- pnorm(abs(twentyfour.dif.z$z_val), lower.tail = FALSE) * 2
 
   
   #Calculate the z score for the different between hypoxia and normoxia at 48 hours
   fortyeight.dif.z <- 
     df_slopes_dep %>% 
-    filter(group == 'Normoxia - 48 Hours' | group == 'Hypoxia - 48 Hours') %>% 
-    summarise(z_val = diff(slope) / sqrt(sum(slope_err^2))) %>% 
-    select(z_val) %>% 
-    pull
+    filter(group == 'Normoxia - 48 Hours' | group == 'Hypoxia - 48 Hours') %>%
+    summarise(z_val = diff(slope) / sqrt(sum(slope_err^2)), pval_x = mean(slope))
+
   
   #Calculate the p-vale for that score
-  fortyeight.df.p <- pnorm(abs(fortyeight.dif.z), lower.tail = FALSE) * 2
+  fortyeight.df.p <- pnorm(abs(fortyeight.dif.z$z_val), lower.tail = FALSE) * 2
 
   
   title <- sprintf("Slope Confidence Intervals for SVGp12 - %s (%s)", cmpnd, assay)
   file_name <- sprintf("../../Graphs/SVG/SVG_%s_%s_CE.png", cmpnd, assay)
   x_lines <- c(rbind(df_slopes_dep$slope_min, df_slopes_dep$slope_max))
-  x_pvals <- max(x_lines[])
+  x_pvals <- rep(c(twentyfour.dif.z$pval_x, twentyfour.dif.z$pval_x,
+                 fortyeight.dif.z$pval_x, fortyeight.dif.z$pval_x), each=2)
+  
+  y_pvals <- rep(c(3.5,1.5)/2, each=4)
   y_lines <- rep(seq(from = nrow(df_slopes_dep), to = 1, by=-1)/2, each=2)
   x_dots <- rep(df_slopes_dep$slope, each=2)
+  lbls <- rep(round(as.numeric(c(twentyfour.df.p, twentyfour.df.p, fortyeight.df.p, fortyeight.df.p)), digits = 5), each=2)
+  lbls <- lapply(lbls, function(x){
+    if (x < 0.05){
+      return (sprintf("p = %s *", x))
+    } else{
+      return (sprintf("p = %s", x))
+    }
+  })
   group <- rep(df_slopes_dep$group, each = 2)
   df_lines <- 
     data.frame(x=x_lines, y=y_lines, group=group) 
-    
+  print(length(lbls))
   ggplot(data=df_lines, mapping=aes(x=x_lines, y=y_lines, color=group)) + 
     geom_line() + 
+    geom_text(aes(x=x_pvals, y=y_pvals, label=lbls),color='black') +
     geom_point(x=x_dots, color="black") +
     labs(x="Regression Slopes 95% Confidence Intervals", y="", color="Condition_Exposure Time",
          title=title) +
