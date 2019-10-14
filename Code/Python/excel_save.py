@@ -176,6 +176,10 @@ class ExcelSaveWindow(QtWidgets.QMainWindow):
         if file_save_dialog.exec():
             file_save_path = file_save_dialog.selectedFiles()[0]
             full_data_df.to_csv(path_or_buf=file_save_path, index=False)
+            msgbox = QtWidgets.QMessageBox()
+            msgbox.setText("File Save Successful")
+            msgbox.setStandardButtons(QtWidgets.QMessageBox.Ok)
+            msgbox.exec_()
 
 def convert_letter_to_number(letter):
     total = 0
