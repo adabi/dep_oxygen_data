@@ -303,7 +303,7 @@ plot_ces <- function(cmpnd, assay){
     geom_line() + 
     geom_text(aes(x=x_pvals, y=y_pvals, label=lbls),color='black') +
     geom_point(x=x_dots, color="black") +
-    labs(x="Regression Slopes 95% Confidence Intervals", y="", color="Condition_Exposure Time",
+    labs(x="Regression Slopes 95% Confidence Intervals", y="", color="Condition - Exposure Time",
          title=title) +
     theme_bw() +
     theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(),
@@ -326,10 +326,10 @@ find_mdl_coefficient_ce <- function(x,y){
   c(std_err, crit_t * std_err)
 }
 
-compare_coefs <- function(condition, exposure_time){
+compare_coefs <- function(condition, exposure_time, corner_title){
   grp<- paste(condition, "_", exposure_time, sep="")
   grp <- sprintf('%s - %s', condition, exposure_time)
-  title <- sprintf("Comparison of Additive Slopes for SVGp12 - %s at %s", exposure_time, condition)
+  title <- sprintf("%s - Comparison of Additive Slopes for SVGp12 - %s at %s", corner_title, exposure_time, condition)
   file_path <- sprintf("../../Graphs/SVG/LDH/SlopesCEs/Compare_%s_%s.png", exposure_time,condition)
   ox66_df <- df_scaled %>% 
     filter(compound == "Ox66", group==grp) 
@@ -368,6 +368,7 @@ compare_coefs <- function(condition, exposure_time){
   
   se.combined <- sqrt((se.dep)^2 + (se.ox66)^2)
   coef.combined <- coef.ox66 + coef.dep
+  coef.difference <- as.character(signif(abs(coef.combined - coef.dep.ox66), digits=3))
   
   x_lines <-
     c(coef.combined - 1.96*se.combined, coef.combined + 1.96*se.combined,
@@ -375,25 +376,33 @@ compare_coefs <- function(condition, exposure_time){
   y_lines <- c(1.5,1.5,1,1)
   groups <- c("Combined Calculated", "Combined Calculated", "Combined Experimental", "Combined Experimental")
   
-  df_lines2 <- data.frame(x=x_lines, y=y_lines, group = groups) %>% 
+  df_lines2 <- data.frame(x=x_lines, y=y_lines, group = groups) 
     
+    plt <- 
     ggplot(data=,df_lines2, mapping= aes(x=x, y=y, color=group)) +
     geom_line(aes(group=group)) +
-    theme_bw(base_size = 5) +
+    annotate("text", x=(coef.combined+ coef.dep.ox66)/2, y = 1.25, label=sprintf("Difference = %s", coef.difference), color="black", size=5) +
+    theme_bw(base_size = 10) +
     theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(),
           panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
     geom_point(aes(x=c(coef.combined, coef.combined, coef.dep.ox66, coef.dep.ox66), y=c(1.5,1.5,1,1), color=group)) +
     ylim(1,1.5) +
     labs(title = title, x="Regression Slopes 95% Confidence Intervals", y="", color="Group") 
+    
+    return(plt)
   
   
   ggsave(file_path, device = 'png', height=2, width=5)
 }
 
-compare_coefs("Normoxia", "24 Hours")
-compare_coefs("Normoxia", "48 Hours")
-compare_coefs("Hypoxia", "24 Hours")
-compare_coefs("Hypoxia", "48 Hours")
+p1 <- compare_coefs("Normoxia", "24 Hours", "A")
+p2 <-compare_coefs("Normoxia", "48 Hours", "B")
+p3 <- compare_coefs("Hypoxia", "24 Hours", "C")
+p4 <- compare_coefs("Hypoxia", "48 Hours", "D")
+
+g <- arrangeGrob(p1,p2,p3,p4, nrow = 2)
+
+ggsave(g, filename = "../../Graphs/SVG/LDH/SlopesCEs/mixture_effects.png", device='png')
 
 
 
