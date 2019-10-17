@@ -204,7 +204,7 @@ ggsave(p3, filename = '../../Graphs/SVG/LDH/Barplots/DEP + Ox66.png', device= "p
 
 # Fit linear regression and 
 plot_and_save <- function(cmpnd, assay){
-  title <- sprintf("LDH Across Groups for Human Astroglial Cells (SVGp12) - %s", assay, cmpnd)
+  title <- sprintf("%s Across Groups for Human Astroglial Cells (SVGp12) - %s", assay, cmpnd)
   file_path <- sprintf("../../Graphs/SVG/LDH/LinearReg/%s_%s.png", cmpnd, assay)
   df_scaled %>%
     filter(compound==cmpnd) %>%
