@@ -1064,6 +1064,7 @@ cell_line="DITNC1"
 	}
 	{
 	experiment="15"
+<<<<<<< HEAD
 	date="5/11/2019"
 	compounds="DEP + Ox66"
 	concentrations="Blank, 20 ug/ml + 50 ppm, 50 ug/ml + 100 ppm, 100 ug/ml + 200 ppm"
@@ -1341,6 +1342,15 @@ cell_line="DITNC1"
 		range="B22:M30"
 		concentrations=[Blank]:[6, 10],[20 ug/ml + 50 ppm]:[8, 9],[50 ug/ml + 100 ppm]:[5, 11],[100 ug/ml + 200 ppm]:[4, 7]
 		}
+
+	date="5/04/2019"
+	compounds="Ox66"
+	concentrations="Blank, 20 ug/ml + 50 ppm, 50 ug/ml + 100 ppm, 100 ug/ml + 200 ppm"
+	exposure_time="24 Hours"
+	condition="Normoxia"
+	assay="LDH"
+	comments=""
+
 	}
 }
 
@@ -1461,7 +1471,7 @@ cell_line="A549"
 	{
 	experiment="5"
 	date="6/13/2019"
-	compounds="DEP"
+	compounds="Ox66"
 	concentrations="Blank, 20 ug/ml, 50 ug/ml, 100 ug/ml"
 	exposure_time="48 Hours"
 	condition="Normoxia"
@@ -1489,7 +1499,7 @@ cell_line="A549"
 	{
 	experiment="6"
 	date="6/13/2019"
-	compounds="DEP"
+	compounds="Ox66"
 	concentrations="Blank, 20 ug/ml, 50 ug/ml, 100 ug/ml"
 	exposure_time="48 Hours"
 	condition="Hypoxia"
@@ -1569,6 +1579,26 @@ cell_line="A549"
 		range="B22:M30"
 		concentrations=[Blank]:[4, 7],[20 ug/ml]:[8, 10],[50 ug/ml]:[6, 9],[100 ug/ml]:[5, 11]
 		}
+	}
+	{
+	experiment="9"
+	date="11/02/2019"
+	compounds="DEP"
+	concentrations="Blank, 20 ug/ml, 50 ug/ml, 100 ug/ml"
+	exposure_time="48 Hours"
+	condition="Normoxia"
+	assay="LDH"
+	comments=""
+	}
+	{
+	experiment="10"
+	date="11/02/2019"
+	compounds="DEP"
+	concentrations="Blank, 20 ug/ml, 50 ug/ml, 100 ug/ml"
+	exposure_time="48 Hours"
+	condition="Hypoxia"
+	assay="LDH"
+	comments=""
 	}
 }
 
