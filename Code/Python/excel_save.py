@@ -105,6 +105,7 @@ class ExcelSaveWindow(QtWidgets.QMainWindow):
         treatment_lst = []
         response_lst = []
         for cell_line in cell_lines:
+            
             experiments = parsing.grab_experiments(cell_line)
             experiments = [experiment for experiment in experiments
                            if experiment[2] in compounds and
@@ -112,8 +113,11 @@ class ExcelSaveWindow(QtWidgets.QMainWindow):
                            experiment[5] in conditions and
                            experiment[6] in assays]
 
+            if cell_line == "RLE6TN":
+                print(experiments)
+
             for experiment in experiments:
-                compounds = experiment[2]
+                compounds_to_add = experiment[2]
                 concentrations = [x.strip() for x in experiment[3].split(",")]
                 exposure_time = experiment[4]
                 condition = experiment[5]
@@ -154,7 +158,7 @@ class ExcelSaveWindow(QtWidgets.QMainWindow):
                                 response_lst += values
                                 treatment_lst += [concentration] * len(values)
                                 cells_lst += [cell_line] * len(values)
-                                compound_lst += [compounds] * len(values)
+                                compound_lst += [compounds_to_add] * len(values)
                                 condition_lst += [condition] * len(values)
                                 exposure_time_lst += [exposure_time] * len(values)
 
@@ -180,6 +184,7 @@ class ExcelSaveWindow(QtWidgets.QMainWindow):
             msgbox.setText("File Save Successful")
             msgbox.setStandardButtons(QtWidgets.QMessageBox.Ok)
             msgbox.exec_()
+
 
 def convert_letter_to_number(letter):
     total = 0

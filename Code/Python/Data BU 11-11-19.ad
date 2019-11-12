@@ -961,19 +961,19 @@ cell_line="DITNC1"
 	comments="MTT - Normoxia"
 		{
 		plate="1"
-		file="Data/MTT/MTT 5-20-19/DITNC1 + DEP 0.45UM 48HRS Normoxia MTT 5-20-19.xlsx"
+		file="Data\MTT\MTT 5-20-19\DITNC1 + DEP 0.45UM 48HRS Normoxia MTT 5-20-19.xlsx"
 		range="B2:M9"
 		concentrations=[Blank]:[5, 10],[20 ug/ml]:[7, 11],[50 ug/ml]:[4, 6],[100 ug/ml]:[8, 9]
 		}
 		{
 		plate="2"
-		file="Data/MTT/MTT 5-20-19/DITNC1 + DEP 0.45UM 48HRS Normoxia MTT 5-20-19.xlsx"
+		file="Data\MTT\MTT 5-20-19\DITNC1 + DEP 0.45UM 48HRS Normoxia MTT 5-20-19.xlsx"
 		range="B12:M19"
 		concentrations=[Blank]:[6, 11],[20 ug/ml]:[8, 9],[50 ug/ml]:[5, 7],[100 ug/ml]:[4, 10]
 		}
 		{
 		plate="3"
-		file="Data/MTT/MTT 5-20-19/DITNC1 + DEP 0.45UM 48HRS Normoxia MTT 5-20-19.xlsx"
+		file="Data\MTT\MTT 5-20-19\DITNC1 + DEP 0.45UM 48HRS Normoxia MTT 5-20-19.xlsx"
 		range="B22:M30"
 		concentrations=[Blank]:[8, 9],[20 ug/ml]:[5, 10],[50 ug/ml]:[4, 11],[100 ug/ml]:[6, 7]
 		}
@@ -989,19 +989,19 @@ cell_line="DITNC1"
 	comments="MTT - Hypoxia"
 		{
 		plate="1"
-		file="Data/MTT/MTT 5-20-19/DITNC1 + DEP 0.45UM 48HRS Hypoxia MTT 5-20-19.xlsx"
+		file="Data\MTT\MTT 5-20-19\DITNC1 + DEP 0.45UM 48HRS Hypoxia MTT 5-20-19.xlsx"
 		range="B2:M9"
 		concentrations=[Blank]:[5, 10],[20 ug/ml]:[7, 11],[50 ug/ml]:[4, 6],[100 ug/ml]:[8, 9]
 		}
 		{
 		plate="2"
-		file="Data/MTT/MTT 5-20-19/DITNC1 + DEP 0.45UM 48HRS Hypoxia MTT 5-20-19.xlsx"
+		file="Data\MTT\MTT 5-20-19\DITNC1 + DEP 0.45UM 48HRS Hypoxia MTT 5-20-19.xlsx"
 		range="B12:M19"
 		concentrations=[Blank]:[6, 11],[20 ug/ml]:[8, 9],[50 ug/ml]:[5, 7],[100 ug/ml]:[4, 10]
 		}
 		{
 		plate="3"
-		file="Data/MTT/MTT 5-20-19/DITNC1 + DEP 0.45UM 48HRS Hypoxia MTT 5-20-19.xlsx"
+		file="Data\MTT\MTT 5-20-19\DITNC1 + DEP 0.45UM 48HRS Hypoxia MTT 5-20-19.xlsx"
 		range="B22:M30"
 		concentrations=[Blank]:[8, 9],[20 ug/ml]:[5, 10],[50 ug/ml]:[4, 11],[100 ug/ml]:[6, 7]
 		}
@@ -1064,7 +1064,7 @@ cell_line="DITNC1"
 	}
 	{
 	experiment="15"
-
+<<<<<<< HEAD
 	date="5/11/2019"
 	compounds="DEP + Ox66"
 	concentrations="Blank, 20 ug/ml + 50 ppm, 50 ug/ml + 100 ppm, 100 ug/ml + 200 ppm"
@@ -1074,19 +1074,19 @@ cell_line="DITNC1"
 	comments=""
 		{
 		plate="1"
-		file="Data/LDH/LDH 5-12-19/DITNC1 + Ox66 + DEP Normoxia 24HRS LDH 5-12-19.xlsx"
+		file="Data\LDH\LDH 5-12-19\DITNC1 + Ox66 + DEP Normoxia 24HRS LDH 5-12-19.xlsx"
 		range="B4:M11"
 		concentrations=[Blank]:[7, 9],[20 ug/ml + 50 ppm]:[5, 10],[50 ug/ml + 100 ppm]:[6, 8],[100 ug/ml + 200 ppm]:[3, 4]
 		}
 		{
 		plate="2"
-		file="Data/LDH/LDH 5-12-19/DITNC1 + Ox66 + DEP Normoxia 24HRS LDH 5-12-19.xlsx"
+		file="Data\LDH\LDH 5-12-19\DITNC1 + Ox66 + DEP Normoxia 24HRS LDH 5-12-19.xlsx"
 		range="B14:M21"
 		concentrations=[Blank]:[5, 10],[20 ug/ml + 50 ppm]:[6, 9],[50 ug/ml + 100 ppm]:[3, 4],[100 ug/ml + 200 ppm]:[7, 8]
 		}
 		{
 		plate="3"
-		file="Data/LDH/LDH 5-12-19/DITNC1 + Ox66 + DEP Normoxia 24HRS LDH 5-12-19.xlsx"
+		file="Data\LDH\LDH 5-12-19\DITNC1 + Ox66 + DEP Normoxia 24HRS LDH 5-12-19.xlsx"
 		range="B24:M32"
 		concentrations=[Blank]:[4, 10],[20 ug/ml + 50 ppm]:[3, 7],[50 ug/ml + 100 ppm]:[5, 8],[100 ug/ml + 200 ppm]:[6, 9]
 		}
@@ -1102,19 +1102,19 @@ cell_line="DITNC1"
 	comments=""
 		{
 		plate="1"
-		file="Data/LDH/LDH 5-12-19/DITNC1 + Ox66 + DEP Hyoxia 24HRS LDH 5-12-19.xlsx"
+		file="Data\LDH\LDH 5-12-19\DITNC1 + Ox66 + DEP Hyoxia 24HRS LDH 5-12-19.xlsx"
 		range="B4:M11"
 		concentrations=[Blank]:[7, 9],[20 ug/ml + 50 ppm]:[5, 10],[50 ug/ml + 100 ppm]:[6, 8],[100 ug/ml + 200 ppm]:[3, 4]
 		}
 		{
 		plate="2"
-		file="Data/LDH/LDH 5-12-19/DITNC1 + Ox66 + DEP Hyoxia 24HRS LDH 5-12-19.xlsx"
+		file="Data\LDH\LDH 5-12-19\DITNC1 + Ox66 + DEP Hyoxia 24HRS LDH 5-12-19.xlsx"
 		range="B14:M21"
 		concentrations=[Blank]:[5, 10],[20 ug/ml + 50 ppm]:[6, 9],[50 ug/ml + 100 ppm]:[3, 4],[100 ug/ml + 200 ppm]:[7, 8]
 		}
 		{
 		plate="3"
-		file="Data/LDH/LDH 5-12-19/DITNC1 + Ox66 + DEP Hyoxia 24HRS LDH 5-12-19.xlsx"
+		file="Data\LDH\LDH 5-12-19\DITNC1 + Ox66 + DEP Hyoxia 24HRS LDH 5-12-19.xlsx"
 		range="B24:M32"
 		concentrations=[Blank]:[4, 10],[20 ug/ml + 50 ppm]:[3, 7],[50 ug/ml + 100 ppm]:[5, 8],[100 ug/ml + 200 ppm]:[6, 9]
 		}
@@ -1130,19 +1130,19 @@ cell_line="DITNC1"
 	comments=""
 		{
 		plate="1"
-		file="Data/LDH/LDH 5-16-19/DITNC +Ox66 + DEP Normoxia 48HRS LDH 5-16-19 .xlsx"
+		file="Data\LDH\LDH 5-16-19\DITNC +Ox66 + DEP Normoxia 48HRS LDH 5-16-19 .xlsx"
 		range="B4:M11"
 		concentrations=[Blank]:[4, 9],[20 ug/ml + 50 ppm]:[8, 11],[50 ug/ml + 100 ppm]:[5, 7],[100 ug/ml + 200 ppm]:[6, 10]
 		}
 		{
 		plate="2"
-		file="Data/LDH/LDH 5-16-19/DITNC +Ox66 + DEP Normoxia 48HRS LDH 5-16-19 .xlsx"
+		file="Data\LDH\LDH 5-16-19\DITNC +Ox66 + DEP Normoxia 48HRS LDH 5-16-19 .xlsx"
 		range="B14:M21"
 		concentrations=[Blank]:[5, 6],[20 ug/ml + 50 ppm]:[7, 11],[50 ug/ml + 100 ppm]:[4, 9],[100 ug/ml + 200 ppm]:[8, 10]
 		}
 		{
 		plate="3"
-		file="Data/LDH/LDH 5-16-19/DITNC +Ox66 + DEP Normoxia 48HRS LDH 5-16-19 .xlsx"
+		file="Data\LDH\LDH 5-16-19\DITNC +Ox66 + DEP Normoxia 48HRS LDH 5-16-19 .xlsx"
 		range="B24:M32"
 		concentrations=[Blank]:[6, 10],[20 ug/ml + 50 ppm]:[8, 9],[50 ug/ml + 100 ppm]:[5, 11],[100 ug/ml + 200 ppm]:[4, 7]
 		}
@@ -1158,19 +1158,19 @@ cell_line="DITNC1"
 	comments=""
 		{
 		plate="1"
-		file="Data/LDH/LDH 5-16-19/DITNC +Ox66 + DEP Hypoxia 48HRS LDH 5-16-19 .xlsx"
+		file="Data\LDH\LDH 5-16-19\DITNC +Ox66 + DEP Hypoxia 48HRS LDH 5-16-19 .xlsx"
 		range="B4:M11"
 		concentrations=[Blank]:[4, 9],[20 ug/ml + 50 ppm]:[8, 11],[50 ug/ml + 100 ppm]:[5, 7],[100 ug/ml + 200 ppm]:[6, 10]
 		}
 		{
 		plate="2"
-		file="Data/LDH/LDH 5-16-19/DITNC +Ox66 + DEP Hypoxia 48HRS LDH 5-16-19 .xlsx"
+		file="Data\LDH\LDH 5-16-19\DITNC +Ox66 + DEP Hypoxia 48HRS LDH 5-16-19 .xlsx"
 		range="B14:M21"
 		concentrations=[Blank]:[5, 6],[20 ug/ml + 50 ppm]:[7, 11],[50 ug/ml + 100 ppm]:[4, 9],[100 ug/ml + 200 ppm]:[8, 10]
 		}
 		{
 		plate="3"
-		file="Data/LDH/LDH 5-16-19/DITNC +Ox66 + DEP Hypoxia 48HRS LDH 5-16-19 .xlsx"
+		file="Data\LDH\LDH 5-16-19\DITNC +Ox66 + DEP Hypoxia 48HRS LDH 5-16-19 .xlsx"
 		range="B24:M32"
 		concentrations=[Blank]:[6, 10],[20 ug/ml + 50 ppm]:[8, 9],[50 ug/ml + 100 ppm]:[5, 11],[100 ug/ml + 200 ppm]:[4, 7]
 		}
@@ -1186,19 +1186,19 @@ cell_line="DITNC1"
 	comments=""
 		{
 		plate="1"
-		file="Data/MTT/MTT 5-18-19/DITNC1 + Ox66 24HRS Normoxia MTT 5-18-19.xlsx"
+		file="Data\MTT\MTT 5-18-19\DITNC1 + Ox66 24HRS Normoxia MTT 5-18-19.xlsx"
 		range="B4:M11"
 		concentrations=[Blank]:[5, 10],[50 ppm]:[7, 11],[100 ppm]:[4, 6],[200 ppm]:[8, 9]
 		}
 		{
 		plate="2"
-		file="Data/MTT/MTT 5-18-19/DITNC1 + Ox66 24HRS Normoxia MTT 5-18-19.xlsx"
+		file="Data\MTT\MTT 5-18-19\DITNC1 + Ox66 24HRS Normoxia MTT 5-18-19.xlsx"
 		range="B14:M21"
 		concentrations=[Blank]:[6, 11],[50 ppm]:[8, 9],[100 ppm]:[5, 7],[200 ppm]:[4, 10]
 		}
 		{
 		plate="3"
-		file="Data/MTT/MTT 5-18-19/DITNC1 + Ox66 24HRS Normoxia MTT 5-18-19.xlsx"
+		file="Data\MTT\MTT 5-18-19\DITNC1 + Ox66 24HRS Normoxia MTT 5-18-19.xlsx"
 		range="B24:M32"
 		concentrations=[Blank]:[8, 9],[50 ppm]:[5, 10],[100 ppm]:[4, 11],[200 ppm]:[6, 7]
 		}
@@ -1214,19 +1214,19 @@ cell_line="DITNC1"
 	comments=""
 		{
 		plate="1"
-		file="Data/MTT/MTT 5-18-19/DITNC1 + Ox66 24HRS Hypoxia MTT 5-18-19.xlsx"
+		file="Data\MTT\MTT 5-18-19\DITNC1 + Ox66 24HRS Hypoxia MTT 5-18-19.xlsx"
 		range="B2:M9"
 		concentrations=[Blank]:[5, 10],[50 ppm]:[7, 11],[100 ppm]:[4, 6],[200 ppm]:[8, 9]
 		}
 		{
 		plate="2"
-		file="Data/MTT/MTT 5-18-19/DITNC1 + Ox66 24HRS Hypoxia MTT 5-18-19.xlsx"
+		file="Data\MTT\MTT 5-18-19\DITNC1 + Ox66 24HRS Hypoxia MTT 5-18-19.xlsx"
 		range="B12:M19"
 		concentrations=[Blank]:[6, 11],[50 ppm]:[8, 9],[100 ppm]:[5, 7],[200 ppm]:[4, 10]
 		}
 		{
 		plate="3"
-		file="Data/MTT/MTT 5-18-19/DITNC1 + Ox66 24HRS Hypoxia MTT 5-18-19.xlsx"
+		file="Data\MTT\MTT 5-18-19\DITNC1 + Ox66 24HRS Hypoxia MTT 5-18-19.xlsx"
 		range="B22:M30"
 		concentrations=[Blank]:[8, 9],[50 ppm]:[5, 10],[100 ppm]:[4, 11],[200 ppm]:[6, 7]
 		}
@@ -1242,19 +1242,19 @@ cell_line="DITNC1"
 	comments=""
 		{
 		plate="1"
-		file="Data/MTT/MTT 5-12-19/DITNC1 + DEP 0.45UM + Ox66 24 hrs Normoxia MTT 5-12-19.xlsx"
+		file="Data\MTT\MTT 5-12-19\DITNC1 + DEP 0.45UM + Ox66 24 hrs Normoxia MTT 5-12-19.xlsx"
 		range="B4:M11"
 		concentrations=[Blank]:[7, 9],[20 ug/ml + 50 ppm]:[5, 10],[50 ug/ml + 100 ppm]:[6, 8],[100 ug/ml + 200 ppm]:[3, 4]
 		}
 		{
 		plate="2"
-		file="Data/MTT/MTT 5-12-19/DITNC1 + DEP 0.45UM + Ox66 24 hrs Normoxia MTT 5-12-19.xlsx"
+		file="Data\MTT\MTT 5-12-19\DITNC1 + DEP 0.45UM + Ox66 24 hrs Normoxia MTT 5-12-19.xlsx"
 		range="B14:M21"
 		concentrations=[Blank]:[5, 10],[20 ug/ml + 50 ppm]:[6, 9],[50 ug/ml + 100 ppm]:[3, 4],[100 ug/ml + 200 ppm]:[7, 8]
 		}
 		{
 		plate="3"
-		file="Data/MTT/MTT 5-12-19/DITNC1 + DEP 0.45UM + Ox66 24 hrs Normoxia MTT 5-12-19.xlsx"
+		file="Data\MTT\MTT 5-12-19\DITNC1 + DEP 0.45UM + Ox66 24 hrs Normoxia MTT 5-12-19.xlsx"
 		range="B24:M32"
 		concentrations=[Blank]:[4, 10],[20 ug/ml + 50 ppm]:[3, 7],[50 ug/ml + 100 ppm]:[5, 8],[100 ug/ml + 200 ppm]:[6, 9]
 		}
@@ -1270,19 +1270,19 @@ cell_line="DITNC1"
 	comments=""
 		{
 		plate="1"
-		file="Data/MTT/MTT 5-12-19/DITNC1 + DEP 0.45UM + Ox66 24 hrs Hypoxia MTT 5-12-19.xlsx"
+		file="Data\MTT\MTT 5-12-19\DITNC1 + DEP 0.45UM + Ox66 24 hrs Hypoxia MTT 5-12-19.xlsx"
 		range="B2:M9"
 		concentrations=[Blank]:[7, 9],[20 ug/ml + 50 ppm]:[5, 10],[50 ug/ml + 100 ppm]:[6, 8],[100 ug/ml + 200 ppm]:[3, 4]
 		}
 		{
 		plate="2"
-		file="Data/MTT/MTT 5-12-19/DITNC1 + DEP 0.45UM + Ox66 24 hrs Hypoxia MTT 5-12-19.xlsx"
+		file="Data\MTT\MTT 5-12-19\DITNC1 + DEP 0.45UM + Ox66 24 hrs Hypoxia MTT 5-12-19.xlsx"
 		range="B12:M19"
 		concentrations=[Blank]:[5, 10],[20 ug/ml + 50 ppm]:[6, 9],[50 ug/ml + 100 ppm]:[3, 4],[100 ug/ml + 200 ppm]:[7, 8]
 		}
 		{
 		plate="3"
-		file="Data/MTT/MTT 5-12-19/DITNC1 + DEP 0.45UM + Ox66 24 hrs Hypoxia MTT 5-12-19.xlsx"
+		file="Data\MTT\MTT 5-12-19\DITNC1 + DEP 0.45UM + Ox66 24 hrs Hypoxia MTT 5-12-19.xlsx"
 		range="B22:M30"
 		concentrations=[Blank]:[4, 10],[20 ug/ml + 50 ppm]:[3, 7],[50 ug/ml + 100 ppm]:[5, 8],[100 ug/ml + 200 ppm]:[6, 9]
 		}
@@ -1298,19 +1298,19 @@ cell_line="DITNC1"
 	comments=""
 		{
 		plate="1"
-		file="Data/MTT/MTT 5-16-19/DITNC1 + Ox66 + DEP Normoxia 48HRS MTT 5-16-19.xlsx"
+		file="Data\MTT\MTT 5-16-19\DITNC1 + Ox66 + DEP Normoxia 48HRS MTT 5-16-19.xlsx"
 		range="B4:M11"
 		concentrations=[Blank]:[4, 9],[20 ug/ml + 50 ppm]:[8, 11],[50 ug/ml + 100 ppm]:[5, 7],[100 ug/ml + 200 ppm]:[6, 10]
 		}
 		{
 		plate="2"
-		file="Data/MTT/MTT 5-16-19/DITNC1 + Ox66 + DEP Normoxia 48HRS MTT 5-16-19.xlsx"
+		file="Data\MTT\MTT 5-16-19\DITNC1 + Ox66 + DEP Normoxia 48HRS MTT 5-16-19.xlsx"
 		range="B14:M21"
 		concentrations=[Blank]:[5, 6],[20 ug/ml + 50 ppm]:[7, 11],[50 ug/ml + 100 ppm]:[4, 9],[100 ug/ml + 200 ppm]:[8, 10]
 		}
 		{
 		plate="3"
-		file="Data/MTT/MTT 5-16-19/DITNC1 + Ox66 + DEP Normoxia 48HRS MTT 5-16-19.xlsx"
+		file="Data\MTT\MTT 5-16-19\DITNC1 + Ox66 + DEP Normoxia 48HRS MTT 5-16-19.xlsx"
 		range="B24:M32"
 		concentrations=[Blank]:[6, 10],[20 ug/ml + 50 ppm]:[8, 9],[50 ug/ml + 100 ppm]:[5, 11],[100 ug/ml + 200 ppm]:[4, 7]
 		}
@@ -1959,7 +1959,7 @@ cell_line="RLE6TN"
 	compounds="DEP + Ox66"
 	concentrations="Blank, 20 ug/ml + 50 ppm, 50 ug/ml + 100 ppm, 100 ug/ml + 200 ppm"
 	exposure_time="48 Hours"
-	condition="Hypoxia"
+	condition="Normoxia"
 	assay="LDH"
 	comments=""
 		{

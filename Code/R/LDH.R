@@ -1,76 +1,8 @@
-
-games.howell <- function(grp, obs) {
-  
-  #Create combinations
-  combs <- combn(unique(grp), 2)
-  
-  # Statistics that will be used throughout the calculations:
-  # n = sample size of each group
-  # groups = number of groups in data
-  # Mean = means of each group sample
-  # std = variance of each group sample
-  n <- tapply(obs, grp, length)
-  groups <- length(tapply(obs, grp, length))
-  Mean <- tapply(obs, grp, mean)
-  std <- tapply(obs, grp, var)
-  
-  statistics <- lapply(1:ncol(combs), function(x) {
-    
-    mean.diff <- Mean[combs[2,x]] - Mean[combs[1,x]]
-    
-    #t-values
-    t <- abs(Mean[combs[1,x]] - Mean[combs[2,x]]) / sqrt((std[combs[1,x]] / n[combs[1,x]]) + (std[combs[2,x]] / n[combs[2,x]]))
-    
-    # Degrees of Freedom
-    df <- (std[combs[1,x]] / n[combs[1,x]] + std[combs[2,x]] / n[combs[2,x]])^2 / # Numerator Degrees of Freedom
-      ((std[combs[1,x]] / n[combs[1,x]])^2 / (n[combs[1,x]] - 1) + # Part 1 of Denominator Degrees of Freedom 
-         (std[combs[2,x]] / n[combs[2,x]])^2 / (n[combs[2,x]] - 1)) # Part 2 of Denominator Degrees of Freedom
-    
-    #p-values
-    p <- ptukey(t * sqrt(2), groups, df, lower.tail = FALSE)
-    
-    # Sigma standard error
-    se <- sqrt(0.5 * (std[combs[1,x]] / n[combs[1,x]] + std[combs[2,x]] / n[combs[2,x]]))
-    
-    # Upper Confidence Limit
-    upper.conf <- lapply(1:ncol(combs), function(x) {
-      mean.diff + qtukey(p = 0.95, nmeans = groups, df = df) * se
-    })[[1]]
-    
-    # Lower Confidence Limit
-    lower.conf <- lapply(1:ncol(combs), function(x) {
-      mean.diff - qtukey(p = 0.95, nmeans = groups, df = df) * se
-    })[[1]]
-    
-    # Group Combinations
-    grp.comb <- paste(combs[1,x], ':', combs[2,x])
-    
-    # Collect all statistics into list
-    stats <- list(grp.comb, mean.diff, se, t, df, p, upper.conf, lower.conf)
-  })
-  
-  # Unlist statistics collected earlier
-  stats.unlisted <- lapply(statistics, function(x) {
-    unlist(x)
-  })
-  
-  # Create dataframe from flattened list
-  results <- data.frame(matrix(unlist(stats.unlisted), nrow = length(stats.unlisted), byrow=TRUE))
-  
-  # Select columns set as factors that should be numeric and change with as.numeric
-  results[c(2, 3:ncol(results))] <- round(as.numeric(as.matrix(results[c(2, 3:ncol(results))])), digits = 3)
-  
-  # Rename data frame columns
-  colnames(results) <- c('groups', 'Mean Difference', 'Standard Error', 't', 'df', 'p', 'upper limit', 'lower limit')
-  
-  return(results)
-}
-
 library(tidyverse)
 library(gridExtra)
 
 # Load the data and convert the blank and mixed treatments to a uniform format
-file_path= "../../Data/Compiled/SVG_LDH_ALL.csv"
+file_path= "../../Data/Compiled/LDH_ALL_Except_A549.csv"
 df <- read.csv(file_path)
 df <- 
   df %>% 
@@ -91,7 +23,7 @@ plot_bar_graph <- function(cmpnd, multiple.comparisons = FALSE){
   df_means <-
     df_scaled %>% 
     filter(compound == cmpnd) %>%
-    group_by(group, treatment) %>% 
+    group_by(cells, group, treatment) %>% 
     summarise(err = sd(response)/sqrt(length(response)), response=mean(response)) %>% 
     ungroup %>% 
     mutate(treatment = factor(treatment)) %>% 
@@ -203,8 +135,8 @@ ggsave(p2, filename = '../../Graphs/SVG/LDH/Barplots/Ox66.png', device = 'png', 
 ggsave(p3, filename = '../../Graphs/SVG/LDH/Barplots/DEP + Ox66.png', device= "png", height = 9, width = 16)
 
 # Fit linear regression and 
-plot_and_save <- function(cmpnd, assay){
-  title <- sprintf("%s Across Groups for Human Astroglial Cells (SVGp12) - %s", assay, cmpnd)
+plot_and_save <- function(cell_line, cmpnd, assay){
+  title <- sprintf("%s Across Groups for %s - %s", assay, cell_line, cmpnd)
   file_path <- sprintf("../../Graphs/SVG/LDH/LinearReg/%s_%s.png", cmpnd, assay)
   df_scaled %>%
     filter(compound==cmpnd) %>%
@@ -242,35 +174,50 @@ find_mdl_coefficient_ce <- function(x,y){
   (crit_t * std_err)
 }
 
+
+cell_lines <- unique(df_scaled$cells)
+
+
+
 plot_ces <- function(cmpnd, assay){
+  y_lines <- vector()
+  y_pvals <- vector()
+  x_lines <- vector()
+  x_pvals <- vector()
+  
   df_slopes <- 
     df_scaled %>% 
-    group_by(compound, group) %>% 
+    group_by(cells, compound, group) %>% 
     summarise(slope = find_mdl_coefficient(treatment, response),
               slope_err = find_mdl_coefficient_ce(treatment,response)) %>% 
     mutate(slope_min = slope-slope_err, slope_max=slope+slope_err) 
-  
-  df_slopes_dep <-
+
+  df_slopes_cmpnd <-
     df_slopes %>% 
     filter(compound== cmpnd) %>% 
     mutate(group = factor(group, levels = c("Normoxia - 24 Hours", "Hypoxia - 24 Hours",
                                             "Normoxia - 48 Hours", "Hypoxia - 48 Hours"))) %>% 
-    arrange(group)
+    arrange(cells, group)
+  
+  view(df_slopes_cmpnd)
   
   #Calculate the z score for the different between hypoxia and normoxia at 24 hours
   twentyfour.dif.z <- 
-    df_slopes_dep %>% 
+    df_slopes_cmpnd %>% 
     filter(group == 'Normoxia - 24 Hours' | group == 'Hypoxia - 24 Hours') %>% 
-    summarise(z_val = diff(slope) / sqrt(sum(slope_err^2)), pval_x = mean(slope)) 
+    group_by(cells) %>% 
+    summarise(z_val = diff(slope) / sqrt(sum(slope_err^2)), pval_x = mean(slope)) %>% 
+    ungroup
   
-  
+  view(twentyfour.dif.z)
+  break
   #Calculate the p-vale for that score
   twentyfour.df.p <- pnorm(abs(twentyfour.dif.z$z_val), lower.tail = FALSE) * 2
   
   
   #Calculate the z score for the different between hypoxia and normoxia at 48 hours
   fortyeight.dif.z <- 
-    df_slopes_dep %>% 
+    df_slopes_cmpnd %>% 
     filter(group == 'Normoxia - 48 Hours' | group == 'Hypoxia - 48 Hours') %>%
     summarise(z_val = diff(slope) / sqrt(sum(slope_err^2)), pval_x = mean(slope))
   
@@ -279,15 +226,20 @@ plot_ces <- function(cmpnd, assay){
   fortyeight.df.p <- pnorm(abs(fortyeight.dif.z$z_val), lower.tail = FALSE) * 2
   
   
-  title <- sprintf("Slope Confidence Intervals for SVGp12 - %s (%s)", cmpnd, assay)
-  file_name <- sprintf("../../Graphs/SVG/LDH/SlopesCEs/SVG_%s_%s_CE.png", cmpnd, assay)
-  x_lines <- c(rbind(df_slopes_dep$slope_min, df_slopes_dep$slope_max))
-  x_pvals <- rep(c(twentyfour.dif.z$pval_x, twentyfour.dif.z$pval_x,
+  title <- sprintf("Slope Confidence Intervals for %s - %s (%s)", cell_line, cmpnd, assay)
+  dir <= sprintf("../../Graphs/%s/SlopesCEs")
+  dir.create(dir, showWarnings = FALSE)
+  file_name <- sprintf("%s/%s_%s_%s_CE.png", dir, cell_line, cmpnd, assay)
+  
+  y_lines <- c(rbind(df_slopes_cmpnd$slope_min, df_slopes_cmpnd$slope_max))
+  y_pvals <- rep(c(twentyfour.dif.z$pval_x, twentyfour.dif.z$pval_x,
                    fortyeight.dif.z$pval_x, fortyeight.dif.z$pval_x), each=2)
   
-  y_pvals <- rep(c(3.5,1.5)/2, each=4)
-  y_lines <- rep(seq(from = nrow(df_slopes_dep), to = 1, by=-1)/2, each=2)
-  x_dots <- rep(df_slopes_dep$slope, each=2)
+  x_lines <- rep((seq(from = nrow(df_slopes_cmpnd), to = 1, by=-1)/2) + i - 1, each=2)
+  x_pvals <- rep((c(3.5,1.5)/2) + i-1, each=4)
+
+  y_dots <- rep(df_slopes_cmpnd$slope, each=2)
+  
   lbls <- rep(round(as.numeric(c(twentyfour.df.p, twentyfour.df.p, fortyeight.df.p, fortyeight.df.p)), digits = 5), each=2)
   lbls <- lapply(lbls, function(x){
     if (x < 0.05){
@@ -296,10 +248,11 @@ plot_ces <- function(cmpnd, assay){
       return (sprintf("p = %s", x))
     }
   })
-  group <- rep(df_slopes_dep$group, each = 2)
+  group <- rep(df_slopes_cmpnd$group, each = 2)
   df_lines <- 
     data.frame(x=x_lines, y=y_lines, group=group) 
-  ggplot(data=df_lines, mapping=aes(x=x_lines, y=y_lines, color=group)) + 
+  plt <-
+    ggplot(data=df_lines, mapping=aes(x=x_lines, y=y_lines, color=group)) + 
     geom_line() + 
     geom_text(aes(x=x_pvals, y=y_pvals, label=lbls),color='black') +
     geom_point(x=x_dots, color="black") +
@@ -308,14 +261,15 @@ plot_ces <- function(cmpnd, assay){
     theme_bw() +
     theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(),
           panel.grid.major = element_blank(), panel.grid.minor = element_blank()) 
-  
-  ggsave(file_name, device = "png", height=3)
+  print(plt)
+  #ggsave(file_name, device = "png", height=3)
+
   
 }
 
 plot_ces("DEP", "LDH")
-plot_ces("Ox66", "LDH")
-plot_ces("DEP + Ox66", "LDH")
+#plot_ces("Ox66", "LDH")
+#plot_ces("DEP + Ox66", "LDH")
 
 
 find_mdl_coefficient_ce <- function(x,y){
