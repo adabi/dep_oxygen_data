@@ -104,6 +104,8 @@ class ExcelSaveWindow(QtWidgets.QMainWindow):
         condition_lst = []
         treatment_lst = []
         response_lst = []
+        assay_lst = []
+
         for cell_line in cell_lines:
             
             experiments = parsing.grab_experiments(cell_line)
@@ -146,7 +148,7 @@ class ExcelSaveWindow(QtWidgets.QMainWindow):
                             values_blank = []
                             for row in rows:
                                 values_blank.append(df[row].values.tolist())
-                            scaling_factor = np.mean(values_blank)
+                            scaling_factor = np.nanmean(values_blank)
                         else:
                             scaling_factor = np.nanmax(df)
 
@@ -161,6 +163,7 @@ class ExcelSaveWindow(QtWidgets.QMainWindow):
                                 compound_lst += [compounds_to_add] * len(values)
                                 condition_lst += [condition] * len(values)
                                 exposure_time_lst += [exposure_time] * len(values)
+                                assay_lst += [assay] * len(values)
 
                     except Exception as exc:
                             print(f'Problem happened at file {plate[1]}')
@@ -170,7 +173,8 @@ class ExcelSaveWindow(QtWidgets.QMainWindow):
                           "exposure_time": exposure_time_lst,
                           "condition": condition_lst,
                           "treatment": treatment_lst,
-                          "response": response_lst}
+                          "response": response_lst,
+                          "assay": assay_lst}
 
         full_data_df = pd.DataFrame(data=full_data_dict)
         file_save_dialog = QtWidgets.QFileDialog()

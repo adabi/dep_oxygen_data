@@ -1,5 +1,42 @@
 ```{r}
 library(tidyverse)
+file_path= "../../Data/Compiled/ALL.csv"
+df <- read.csv(file_path)
+df <- 
+  df %>% 
+  mutate(treatment = str_replace(treatment, "Blank", "0 ug/ml"),
+         treatment = str_replace(treatment, "20 ug/ml \\+ 50 ppm", "70 ug/ml"),
+         treatment = str_replace(treatment, "50 ug/ml \\+ 100 ppm", "150 ug/ml"),
+         treatment = str_replace(treatment, "100 ug/ml \\+ 200 ppm", "300 ug/ml")) %>% 
+  separate(treatment, into=c("treatment", "units"), sep=" ") %>% 
+  mutate(treatment = as.numeric(treatment)) %>% 
+  select(-units) %>% 
+  unite(group, condition, exposure_time, sep=" - ")
+
+df_scaled <- drop_na(df)
+```
+
+```{r}
+ df_slopes <- 
+    df_scaled %>% 
+    group_by(assay, cells, compound, group) %>% 
+    summarise(slope = find_mdl_coefficient(treatment, response),
+              slope_err = find_mdl_coefficient_ce(treatment,response)) %>% 
+    mutate(slope_min = slope-slope_err, slope_max=slope+slope_err) 
+
+df_test <- 
+    df_slopes %>%
+    filter(compound == "Ox66") %>% 
+    separate(group, into=c("condition", "exposure_time"), sep=" - ")
+
+df_test <- 
+    df_test %>% 
+    group_by(assay, cells, exposure_time) %>% 
+    mutate(z_val = diff(slope) / sqrt(sum(slope_err^2)), pval_y = mean(slope))
+```
+
+```{r}
+library(tidyverse)
 
 #Function for finding the slope coefficient 
 find_mdl_coefficient <- function(x,y){
@@ -15,20 +52,22 @@ find_mdl_coefficient_ce <- function(x,y){
   (crit_t * std_err)
 }
 
+calcaulte_pval_label_x <- function(exposure_time){
+  x_pos <- str_replace(exposure_time, "24 Hours", "1.5")
+  x_pos <- str_replace(x_pos, "48 Hours", "3.5")
+  return(x_pos)
+}
+
 
 cell_lines <- as.character(unique(df_scaled$cells))
 
 
 
-plot_ces <- function(cmpnd, assay){
-  y_lines <- vector()
-  y_pvals <- vector()
-  x_lines <- vector()
-  x_pvals <- vector()
+plot_ces <- function(cmpnd){
   
   df_slopes <- 
     df_scaled %>% 
-    group_by(cells, compound, group) %>% 
+    group_by(assay, cells, compound, group) %>% 
     summarise(slope = find_mdl_coefficient(treatment, response),
               slope_err = find_mdl_coefficient_ce(treatment,response)) %>% 
     mutate(slope_min = slope-slope_err, slope_max=slope+slope_err) 
@@ -40,9 +79,17 @@ plot_ces <- function(cmpnd, assay){
 
   df_test <- 
     df_test %>% 
-    group_by(cells, exposure_time) %>% 
-    mutate(z_val = diff(slope) / sqrt(sum(slope_err^2)), pval_x = mean(slope)) %>% 
-    mutate(p_val = pnorm(abs(z_val), lower.tail = FALSE) * 2)
+    group_by(assay, cells, exposure_time) %>% 
+    mutate(z_val = diff(slope) / sqrt(sum(slope_err^2)), pval_y = mean(slope)) %>% 
+    mutate(p_val = pnorm(abs(z_val), lower.tail = FALSE) * 2) %>% 
+    mutate(p_val = round(p_val, digits = 3)) %>% 
+    mutate(pval_x = as.numeric(calcaulte_pval_label_x(exposure_time))) %>% 
+    transform(aestriks = case_when(
+      p_val < 0.05 ~ "*",
+      TRUE ~ ""
+      )) %>% 
+    mutate(p_val = paste("p =", p_val)) %>% 
+    unite(p_val, p_val, aestriks, sep = " ")
   
     df_test <-
     df_test %>% 
@@ -51,108 +98,36 @@ plot_ces <- function(cmpnd, assay){
                                               "Normoxia - 48 Hours", "Hypoxia - 48 Hours"))) %>% 
     arrange(group)
   
-   
-  #Calculate the z score for the different between hypoxia and normoxia at 24 hours
-  # twentyfour.dif.z <- 
-  #   df_slopes_cmpnd %>% 
-  #   filter(group == 'Normoxia - 24 Hours' | group == 'Hypoxia - 24 Hours') %>% 
-  #   group_by(cells) %>% 
-  #   summarise(z_val = diff(slope) / sqrt(sum(slope_err^2)), pval_y = mean(slope)) 
-  # 
-  # twentyfour.dif.z <-
-  #   twentyfour.dif.z %>% 
-  #   mutate(p_val = pnorm(abs(z_val), lower.tail = FALSE) * 2)
+  #view(df_test)
   
-
-  
-  #Calculate the p-vale for that score
-  # twentyfour.df.p <- pnorm(abs(twentyfour.dif.z$z_val), lower.tail = FALSE) * 2
-  # 
-  
-  #Calculate the z score for the different between hypoxia and normoxia at 48 hours
-  # fortyeight.dif.z <- 
-  #   df_slopes_cmpnd %>% 
-  #   filter(group == 'Normoxia - 48 Hours' | group == 'Hypoxia - 48 Hours') %>%
-  #   summarise(z_val = diff(slope) / sqrt(sum(slope_err^2)), pval_x = mean(slope))
-  
-  
-  #Calculate the p-vale for that score
-  # fortyeight.df.p <- pnorm(abs(fortyeight.dif.z$z_val), lower.tail = FALSE) * 2
-  
-  
-  # title <- sprintf("Slope Confidence Intervals for %s - %s (%s)", cell_line, cmpnd, assay)
-  # dir <- sprintf("../../Graphs/%s/SlopesCEs", cell_line)
-  # dir.create(dir, showWarnings = FALSE)
-  # file_name <- sprintf("%s/%s_%s_%s_CE.png", dir, cell_line, cmpnd, assay)
-  # 
-  # y_lines <- c(rbind(df_slopes_cmpnd$slope_min, df_slopes_cmpnd$slope_max))
-  # y_pvals <- rep(c(twentyfour.dif.z$pval_x, twentyfour.dif.z$pval_x,
-  #                  fortyeight.dif.z$pval_x, fortyeight.dif.z$pval_x), each=2)
-  # 
-  # x_lines <- rep((seq(from = nrow(df_slopes_cmpnd), to = 1, by=-1)/2) + i - 1, each=2)
-  # x_pvals <- rep((c(3.5,1.5)/2) + i-1, each=4)
-  # 
-  # y_dots <- rep(df_slopes_cmpnd$slope, each=2)
-  # x_dots <- 
-  # lbls <- rep(round(as.numeric(c(twentyfour.df.p, twentyfour.df.p, fortyeight.df.p, fortyeight.df.p)), digits = 5), each=2)
-  # lbls <- lapply(lbls, function(x){
-  #   if (x < 0.05){
-  #     return (sprintf("p = %s *", x))
-  #   } else{
-  #     return (sprintf("p = %s", x))
-  #   }
-  # })
-  # group <- rep(df_slopes_cmpnd$group, each = 2)
-  # df_lines <- 
-  #   data.frame(x=x_lines, y=y_lines, group=group) 
-    
-  df_test_2 <-
-    df_test 
-  
-  # plt <-
-  #   ggplot(data=df_test2) + 
-  #   geom_line(aes(x=group, y=)) + 
-  #   geom_text(aes(x=x_pvals, y=y_pvals, label=lbls),color='black') +
-  #   geom_point(y=y_dots, color="black") +
-  #   labs(x="Regression Slopes 95% Confidence Intervals", y="", color="Condition - Exposure Time",
-  #        title=title) +
-  #   theme_bw() +
-  #   theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(),
-  #         panel.grid.major = element_blank(), panel.grid.minor = element_blank()) 
-  # print(plt)
+  title <- sprintf("Assay Trends for All Cell Lines - %s", cmpnd )
   plt <-
-    ggplot(data=df_test_2) +
+    ggplot(data=df_test) +
     geom_errorbar(aes(x=group, ymin=slope_min, ymax=slope_max, colour=group, width=0), size=1.5, alpha=0.6) +
-    geom_point(aes(x=group, y=slope), size=2) + 
-    facet_wrap(~cells, strip.position = "bottom", scales = "free_x") +
-    theme_bw()
+    geom_hline(yintercept = 0, linetype='dashed', alpha = 0.5)+ 
+    geom_point(aes(x=group, y=slope, color = group), size=1.5) + 
+    geom_text(aes(x=pval_x, y=pval_y, label=as.character(p_val), angle=90)) + 
+    facet_wrap(assay~cells, strip.position = "bottom", scales = "free_x", shrink = FALSE, nrow=2) +
+    theme_bw() +
+    theme(axis.text.x = element_blank(), axis.ticks.x = element_blank(), panel.grid = element_blank()) +
+    labs(title = title, x="", y="Trend Intensity (Slope) - 95% Confidence Interval", color = 'Condition - Exposure Time') +
+    scale_y_continuous(limits = c(min(df_test$slope) - 0.005, max(df_test$slope) + 0.004))
 
   
-  print(plt)
-#ggsave(file_name, device = "png", height=3)
+  return(plt)
+
   
 }
 
-plot_ces("DEP", "LDH")
-#plot_ces("Ox66", "LDH")
-#plot_ces("DEP + Ox66", "LDH")
+p1 <- plot_ces("DEP")
+ggsave("../../Graphs/SlopeCEs_DEP.png", device = "png", type='cairo', width=8, height=4.5)
+
+p2 <- plot_ces("Ox66")
+ggsave("../../Graphs/SlopeCEs_Ox66.png", device = "png", type='cairo', width=8, height=4.5)
+
+p3 <- plot_ces("DEP + Ox66")
+ggsave("../../Graphs/SlopeCEs_MIX.png", device = "png", type='cairo', width=8, height=4.5)
 ```
 
-```{r}
-library(tidyverse)
-file_path= "../../Data/Compiled/LDH_ALL_Except_A549.csv"
-df <- read.csv(file_path)
-df <- 
-  df %>% 
-  mutate(treatment = str_replace(treatment, "Blank", "0 ug/ml"),
-         treatment = str_replace(treatment, "20 ug/ml \\+ 50 ppm", "70 ug/ml"),
-         treatment = str_replace(treatment, "50 ug/ml \\+ 100 ppm", "150 ug/ml"),
-         treatment = str_replace(treatment, "100 ug/ml \\+ 200 ppm", "300 ug/ml")) %>% 
-  separate(treatment, into=c("treatment", "units"), sep=" ") %>% 
-  mutate(treatment = as.numeric(treatment)) %>% 
-  select(-units) %>% 
-  unite(group, condition, exposure_time, sep=" - ")
 
-df_scaled <- df
-```
 

@@ -6,6 +6,7 @@ import pathlib
 class ExperimentsModel(QtCore.QAbstractTableModel):
 
     sig_changes = QtCore.pyqtSignal(str, str, str)
+
     def __init__(self, data, cell_line):
         super().__init__()
         self.cell_line = cell_line
@@ -33,8 +34,6 @@ class ExperimentsModel(QtCore.QAbstractTableModel):
                 else:
                     if column == 1:
                         return("NEW")
-
-
 
     def flags(self, QModelIndex):
         flags = super().flags(QModelIndex)
@@ -258,6 +257,7 @@ class PlatesModel(QtCore.QAbstractTableModel):
 
         self.endResetModel()
 
+
 class CompareModel(QtCore.QAbstractTableModel):
 
     sig_changes = QtCore.pyqtSignal(str, str, str)
@@ -316,6 +316,7 @@ class CompareModel(QtCore.QAbstractTableModel):
         self.insertRow(len(self.data))
         self.data.append([experiment[0]] + [cell_line] + experiment[1:] + [""])
         self.endInsertRows()
+
 
 class ListModel(QtCore.QAbstractListModel):
     def __init__(self, data):

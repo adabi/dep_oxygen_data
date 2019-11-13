@@ -1580,6 +1580,24 @@ cell_line="A549"
 	condition="Normoxia"
 	assay="LDH"
 	comments=""
+		{
+		plate="1"
+		file="Data\LDH\LDH 11-2-19\A549 + DEP 0.45UM 48HRS Normoxia LDH.xlsx"
+		range="B4:M11"
+		concentrations=[Blank]:[8, 10],[20 ug/ml]:[5, 9],[50 ug/ml]:[7, 11],[100 ug/ml]:[4, 6]
+		}
+		{
+		plate="2"
+		file="Data\LDH\LDH 11-2-19\A549 + DEP 0.45UM 48HRS Normoxia LDH.xlsx"
+		range="B14:M21"
+		concentrations=[Blank]:[6, 8],[20 ug/ml]:[4, 10],[50 ug/ml]:[9, 11],[100 ug/ml]:[5, 7]
+		}
+		{
+		plate="3"
+		file="Data\LDH\LDH 11-2-19\A549 + DEP 0.45UM 48HRS Normoxia LDH.xlsx"
+		range="B24:M32"
+		concentrations=[Blank]:[4, 7],[20 ug/ml]:[8, 10],[50 ug/ml]:[6, 9],[100 ug/ml]:[5, 11]
+		}
 	}
 	{
 	experiment="10"
@@ -1590,6 +1608,416 @@ cell_line="A549"
 	condition="Hypoxia"
 	assay="LDH"
 	comments=""
+		{
+		plate="1"
+		file="Data\LDH\LDH 11-2-19\A549 + DEP 0.45UM 48HRS Hypoxia LDH.xlsx"
+		range="B4:M11"
+		concentrations=[Blank]:[8, 10],[20 ug/ml]:[5, 9],[50 ug/ml]:[7, 11],[100 ug/ml]:[4, 6]
+		}
+		{
+		plate="2"
+		file="Data\LDH\LDH 11-2-19\A549 + DEP 0.45UM 48HRS Hypoxia LDH.xlsx"
+		range="B14:M21"
+		concentrations=[Blank]:[6, 8],[20 ug/ml]:[4, 10],[50 ug/ml]:[9, 11],[100 ug/ml]:[5, 7]
+		}
+		{
+		plate="3"
+		file="Data\LDH\LDH 11-2-19\A549 + DEP 0.45UM 48HRS Hypoxia LDH.xlsx"
+		range="B24:M32"
+		concentrations=[Blank]:[4, 7],[20 ug/ml]:[8, 10],[50 ug/ml]:[6, 9],[100 ug/ml]:[5, 11]
+		}
+	}
+	{
+	experiment="11"
+	date="4/22/2019"
+	compounds="Ox66"
+	concentrations="Blank, 50 ppm, 100 ppm, 200 ppm"
+	exposure_time="24 Hours"
+	condition="Normoxia"
+	assay="MTT"
+	comments=""
+		{
+		plate="1"
+		file="Data\MTT\A549 + Ox66 MTT AD 4-22-19.xlsx"
+		range="B4:M11"
+		concentrations=[Blank]:[5, 9],[50 ppm]:[3, 11],[100 ppm]:[8, 10],[200 ppm]:[4, 6]
+		}
+		{
+		plate="2"
+		file="Data\MTT\A549 + Ox66 MTT AD 4-22-19.xlsx"
+		range="B14:M21"
+		concentrations=[Blank]:[2, 4],[50 ppm]:[6, 10],[100 ppm]:[3, 9],[200 ppm]:[7, 8]
+		}
+		{
+		plate="3"
+		file="Data\MTT\A549 + Ox66 MTT AD 4-22-19.xlsx"
+		range="B24:M32"
+		concentrations=[Blank]:[2, 3],[50 ppm]:[6, 11],[100 ppm]:[8, 10],[200 ppm]:[5, 9]
+		}
+	}
+	{
+	experiment="12"
+	date="4/22/2019"
+	compounds="Ox66"
+	concentrations="Blank, 50 ppm, 100 ppm, 200 ppm"
+	exposure_time="24 Hours"
+	condition="Normoxia"
+	assay="LDH"
+	comments=""
+		{
+		plate="1"
+		file="Data\LDH\LDH 4-22-19\A549 + Ox66 LDH AD 4-22-19.xlsx"
+		range="B4:M11"
+		concentrations=[Blank]:[5, 9],[50 ppm]:[3, 11],[100 ppm]:[8, 10],[200 ppm]:[4, 6]
+		}
+		{
+		plate="2"
+		file="Data\LDH\LDH 4-22-19\A549 + Ox66 LDH AD 4-22-19.xlsx"
+		range="B14:M21"
+		concentrations=[Blank]:[2, 4],[50 ppm]:[6, 10],[100 ppm]:[3, 9],[200 ppm]:[7, 8]
+		}
+		{
+		plate="3"
+		file="Data\LDH\LDH 4-22-19\A549 + Ox66 LDH AD 4-22-19.xlsx"
+		range="B24:M32"
+		concentrations=[Blank]:[2, 3],[50 ppm]:[6, 11],[100 ppm]:[8, 10],[200 ppm]:[5, 9]
+		}
+	}
+	{
+	experiment="13"
+	date="4/29/2019"
+	compounds="Ox66"
+	concentrations="Blank, 50 ppm, 100 ppm, 200 ppm"
+	exposure_time="24 Hours"
+	condition="Hypoxia"
+	assay="MTT"
+	comments=""
+		{
+		plate="1"
+		file="Data\MTT\4-29-19\A549 + Ox66 Hypoxia MTT AD 4-29-19.xlsx"
+		range="B4:M11"
+		concentrations=[Blank]:[2, 4],[50 ppm]:[5, 9],[100 ppm]:[6, 11],[200 ppm]:[7, 10]
+		}
+		{
+		plate="2"
+		file="Data\MTT\4-29-19\A549 + Ox66 Hypoxia MTT AD 4-29-19.xlsx"
+		range="B14:M21"
+		concentrations=[Blank]:[10, 11],[50 ppm]:[8, 9],[100 ppm]:[3, 4],[200 ppm]:[5, 6]
+		}
+		{
+		plate="3"
+		file="Data\MTT\4-29-19\A549 + Ox66 Hypoxia MTT AD 4-29-19.xlsx"
+		range="B24:M32"
+		concentrations=[Blank]:[6, 11],[50 ppm]:[3, 7],[100 ppm]:[9, 10],[200 ppm]:[2, 5]
+		}
+	}
+	{
+	experiment="14"
+	date="4/29/2019"
+	compounds="Ox66"
+	concentrations="Blank, 50 ppm, 100 ppm, 200 ppm"
+	exposure_time="24 Hours"
+	condition="Hypoxia"
+	assay="LDH"
+	comments=""
+		{
+		plate="1"
+		file="Data\LDH\LDH 4-29-19\A549 + Ox66 Hypoxia LDH AD 4-29-19 530 nm.xlsx"
+		range="B4:M11"
+		concentrations=[Blank]:[2, 4],[50 ppm]:[5, 9],[100 ppm]:[6, 11],[200 ppm]:[7, 10]
+		}
+		{
+		plate="2"
+		file="Data\LDH\LDH 4-29-19\A549 + Ox66 Hypoxia LDH AD 4-29-19 530 nm.xlsx"
+		range="B14:M21"
+		concentrations=[Blank]:[10, 11],[50 ppm]:[8, 9],[100 ppm]:[3, 4],[200 ppm]:[5, 6]
+		}
+		{
+		plate="3"
+		file="Data\LDH\LDH 4-29-19\A549 + Ox66 Hypoxia LDH AD 4-29-19 530 nm.xlsx"
+		range="B24:M32"
+		concentrations=[Blank]:[6, 11],[50 ppm]:[3, 7],[100 ppm]:[9, 10],[200 ppm]:[2, 5]
+		}
+	}
+	{
+	experiment="15"
+	date="4/20/2019"
+	compounds="DEP + Ox66"
+	concentrations="Blank, 20 ug/ml + 50 ppm, 50 ug/ml + 100 ppm, 100 ug/ml + 200 ppm"
+	exposure_time="24 Hours"
+	condition="Normoxia"
+	assay="LDH"
+	comments=""
+		{
+		plate="1"
+		file="Data\LDH\LDH 4-20-19\A549 + DEP + Ox66 LDH AD 4-20-19.xlsx"
+		range="B4:M11"
+		concentrations=[Blank]:[7, 11],[20 ug/ml + 50 ppm]:[8, 10],[50 ug/ml + 100 ppm]:[2, 9],[100 ug/ml + 200 ppm]:[3, 6]
+		}
+		{
+		plate="2"
+		file="Data\LDH\LDH 4-20-19\A549 + DEP + Ox66 LDH AD 4-20-19.xlsx"
+		range="B14:M21"
+		concentrations=[Blank]:[5, 8],[20 ug/ml + 50 ppm]:[6, 7],[50 ug/ml + 100 ppm]:[2, 11],[100 ug/ml + 200 ppm]:[9, 10]
+		}
+		{
+		plate="3"
+		file="Data\LDH\LDH 4-20-19\A549 + DEP + Ox66 LDH AD 4-20-19.xlsx"
+		range="B24:M32"
+		concentrations=[Blank]:[9, 11],[20 ug/ml + 50 ppm]:[3, 6],[50 ug/ml + 100 ppm]:[2, 7],[100 ug/ml + 200 ppm]:[4, 8]
+		}
+	}
+	{
+	experiment="16"
+	date="4/20/2019"
+	compounds="DEP + Ox66"
+	concentrations="Blank, 20 ug/ml + 50 ppm, 50 ug/ml + 100 ppm, 100 ug/ml + 200 ppm"
+	exposure_time="24 Hours"
+	condition="Hypoxia"
+	assay="LDH"
+	comments=""
+		{
+		plate="1"
+		file="Data\LDH\LDH 4-20-19\A549 + DEP + Ox66 Hypoxia LDH AD 4-20-19.xlsx"
+		range="B4:M11"
+		concentrations=[Blank]:[7, 11],[20 ug/ml + 50 ppm]:[8, 10],[50 ug/ml + 100 ppm]:[2, 9],[100 ug/ml + 200 ppm]:[3, 6]
+		}
+		{
+		plate="2"
+		file="Data\LDH\LDH 4-20-19\A549 + DEP + Ox66 Hypoxia LDH AD 4-20-19.xlsx"
+		range="B14:M21"
+		concentrations=[Blank]:[5, 8],[20 ug/ml + 50 ppm]:[6, 7],[50 ug/ml + 100 ppm]:[2, 11],[100 ug/ml + 200 ppm]:[9, 10]
+		}
+		{
+		plate="3"
+		file="Data\LDH\LDH 4-20-19\A549 + DEP + Ox66 Hypoxia LDH AD 4-20-19.xlsx"
+		range="B24:M32"
+		concentrations=[Blank]:[9, 11],[20 ug/ml + 50 ppm]:[3, 6],[50 ug/ml + 100 ppm]:[2, 7],[100 ug/ml + 200 ppm]:[4, 8]
+		}
+	}
+	{
+	experiment="17"
+	date="4/20/2019"
+	compounds="DEP + Ox66"
+	concentrations="Blank, 20 ug/ml + 50 ppm, 50 ug/ml + 100 ppm, 100 ug/ml + 200 ppm"
+	exposure_time="24 Hours"
+	condition="Normoxia"
+	assay="MTT"
+	comments=""
+		{
+		plate="1"
+		file="Data\MTT\4-20-19\A549 + DEP + Ox66 MTT AD 4-20-19.xlsx"
+		range="B4:M11"
+		concentrations=[Blank]:[7, 11],[20 ug/ml + 50 ppm]:[8, 10],[50 ug/ml + 100 ppm]:[2, 9],[100 ug/ml + 200 ppm]:[3, 6]
+		}
+		{
+		plate="2"
+		file="Data\MTT\4-20-19\A549 + DEP + Ox66 MTT AD 4-20-19.xlsx"
+		range="B14:M21"
+		concentrations=[Blank]:[5, 8],[20 ug/ml + 50 ppm]:[6, 7],[50 ug/ml + 100 ppm]:[2, 11],[100 ug/ml + 200 ppm]:[9, 10]
+		}
+		{
+		plate="3"
+		file="Data\MTT\4-20-19\A549 + DEP + Ox66 MTT AD 4-20-19.xlsx"
+		range="B24:M32"
+		concentrations=[Blank]:[9, 11],[20 ug/ml + 50 ppm]:[3, 6],[50 ug/ml + 100 ppm]:[2, 7],[100 ug/ml + 200 ppm]:[4, 8]
+		}
+	}
+	{
+	experiment="18"
+	date="4/20/2019"
+	compounds="DEP + Ox66"
+	concentrations="Blank, 20 ug/ml + 50 ppm, 50 ug/ml + 100 ppm, 100 ug/ml + 200 ppm"
+	exposure_time="24 Hours"
+	condition="Hypoxia"
+	assay="MTT"
+	comments=""
+		{
+		plate="1"
+		file="Data\MTT\4-20-19\A549 + DEP + Ox66 Hypoxia MTT AD 4-20-19.xlsx"
+		range="B4:M11"
+		concentrations=[Blank]:[7, 11],[20 ug/ml + 50 ppm]:[8, 10],[50 ug/ml + 100 ppm]:[2, 9],[100 ug/ml + 200 ppm]:[3, 6]
+		}
+		{
+		plate="2"
+		file="Data\MTT\4-20-19\A549 + DEP + Ox66 Hypoxia MTT AD 4-20-19.xlsx"
+		range="B14:M21"
+		concentrations=[Blank]:[5, 8],[20 ug/ml + 50 ppm]:[6, 7],[50 ug/ml + 100 ppm]:[2, 11],[100 ug/ml + 200 ppm]:[9, 10]
+		}
+		{
+		plate="3"
+		file="Data\MTT\4-20-19\A549 + DEP + Ox66 Hypoxia MTT AD 4-20-19.xlsx"
+		range="B24:M32"
+		concentrations=[Blank]:[9, 11],[20 ug/ml + 50 ppm]:[3, 6],[50 ug/ml + 100 ppm]:[2, 7],[100 ug/ml + 200 ppm]:[4, 8]
+		}
+	}
+	{
+	experiment="19"
+	date="11/5/2019"
+	compounds="DEP + Ox66"
+	concentrations="Blank, 20 ug/ml + 50 ppm, 50 ug/ml + 100 ppm, 100 ug/ml + 200 ppm"
+	exposure_time="48 Hours"
+	condition="Hypoxia"
+	assay="LDH"
+	comments=""
+		{
+		plate="1"
+		file="Data\LDH\LDH 11-5-19\A549 + DEP + Ox66 48HRS Hypoxia LDH 11-5-19.xlsx"
+		range="B4:M11"
+		concentrations=[Blank]:[3, 5],[20 ug/ml + 50 ppm]:[7, 8],[50 ug/ml + 100 ppm]:[9, 10],[100 ug/ml + 200 ppm]:[4, 6]
+		}
+		{
+		plate="2"
+		file="Data\LDH\LDH 11-5-19\A549 + DEP + Ox66 48HRS Hypoxia LDH 11-5-19.xlsx"
+		range="B14:M21"
+		concentrations=[Blank]:[5, 6],[20 ug/ml + 50 ppm]:[3, 8],[50 ug/ml + 100 ppm]:[7, 10],[100 ug/ml + 200 ppm]:[4, 9]
+		}
+		{
+		plate="3"
+		file="Data\LDH\LDH 11-5-19\A549 + DEP + Ox66 48HRS Hypoxia LDH 11-5-19.xlsx"
+		range="B24:M32"
+		concentrations=[Blank]:[4, 10],[20 ug/ml + 50 ppm]:[8, 9],[50 ug/ml + 100 ppm]:[5, 7],[100 ug/ml + 200 ppm]:[3, 6]
+		}
+	}
+	{
+	experiment="20"
+	date="11/5/2019"
+	compounds="DEP + Ox66"
+	concentrations="Blank, 20 ug/ml + 50 ppm, 50 ug/ml + 100 ppm, 100 ug/ml + 200 ppm"
+	exposure_time="48 Hours"
+	condition="Normoxia"
+	assay="LDH"
+	comments=""
+		{
+		plate="1"
+		file="Data\LDH\LDH 11-5-19\A549 + DEP + Ox66 48HRS Normoxia LDH 11-5-19.xlsx"
+		range="B4:M11"
+		concentrations=[Blank]:[3, 5],[20 ug/ml + 50 ppm]:[7, 8],[50 ug/ml + 100 ppm]:[9, 10],[100 ug/ml + 200 ppm]:[4, 6]
+		}
+		{
+		plate="2"
+		file="Data\LDH\LDH 11-5-19\A549 + DEP + Ox66 48HRS Normoxia LDH 11-5-19.xlsx"
+		range="B14:M21"
+		concentrations=[Blank]:[5, 6],[20 ug/ml + 50 ppm]:[3, 8],[50 ug/ml + 100 ppm]:[7, 10],[100 ug/ml + 200 ppm]:[4, 9]
+		}
+		{
+		plate="3"
+		file="Data\LDH\LDH 11-5-19\A549 + DEP + Ox66 48HRS Normoxia LDH 11-5-19.xlsx"
+		range="B24:M32"
+		concentrations=[Blank]:[4, 10],[20 ug/ml + 50 ppm]:[8, 9],[50 ug/ml + 100 ppm]:[5, 7],[100 ug/ml + 200 ppm]:[3, 6]
+		}
+	}
+	{
+	experiment="21"
+	date="6/15/2019"
+	compounds="DEP + Ox66"
+	concentrations="Blank, 20 ug/ml + 50 ppm, 50 ug/ml + 100 ppm, 100 ug/ml + 200 ppm"
+	exposure_time="48 Hours"
+	condition="Normoxia"
+	assay="MTT"
+	comments=""
+		{
+		plate="1"
+		file="Data\MTT\MTT 6-15-19\A549 + DEP + Ox66 48 Hours Normoxia MTT 6-15-19.xlsx"
+		range="B2:M9"
+		concentrations=[Blank]:[10, 11],[20 ug/ml + 50 ppm]:[5, 7],[50 ug/ml + 100 ppm]:[6, 8],[100 ug/ml + 200 ppm]:[4, 9]
+		}
+		{
+		plate="2"
+		file="Data\MTT\MTT 6-15-19\A549 + DEP + Ox66 48 Hours Normoxia MTT 6-15-19.xlsx"
+		range="B12:M19"
+		concentrations=[Blank]:[6, 10],[20 ug/ml + 50 ppm]:[8, 9],[50 ug/ml + 100 ppm]:[5, 7],[100 ug/ml + 200 ppm]:[4, 11]
+		}
+		{
+		plate="3"
+		file="Data\MTT\MTT 6-15-19\A549 + DEP + Ox66 48 Hours Normoxia MTT 6-15-19.xlsx"
+		range="B22:M30"
+		concentrations=[Blank]:[8, 9],[20 ug/ml + 50 ppm]:[5, 11],[50 ug/ml + 100 ppm]:[4, 10],[100 ug/ml + 200 ppm]:[6, 7]
+		}
+	}
+	{
+	experiment="22"
+	date="6/15/2019"
+	compounds="DEP + Ox66"
+	concentrations="Blank, 20 ug/ml + 50 ppm, 50 ug/ml + 100 ppm, 100 ug/ml + 200 ppm"
+	exposure_time="48 Hours"
+	condition="Hypoxia"
+	assay="MTT"
+	comments=""
+		{
+		plate="1"
+		file="Data\MTT\MTT 6-15-19\A549 + DEP + Ox66 36 Hours Hypoxia MTT 6-15-19.xlsx"
+		range="B2:M9"
+		concentrations=[Blank]:[10, 11],[20 ug/ml + 50 ppm]:[5, 7],[50 ug/ml + 100 ppm]:[6, 8],[100 ug/ml + 200 ppm]:[4, 9]
+		}
+		{
+		plate="2"
+		file="Data\MTT\MTT 6-15-19\A549 + DEP + Ox66 36 Hours Hypoxia MTT 6-15-19.xlsx"
+		range="B12:M19"
+		concentrations=[Blank]:[6, 10],[20 ug/ml + 50 ppm]:[8, 9],[50 ug/ml + 100 ppm]:[5, 7],[100 ug/ml + 200 ppm]:[4, 11]
+		}
+		{
+		plate="3"
+		file="Data\MTT\MTT 6-15-19\A549 + DEP + Ox66 36 Hours Hypoxia MTT 6-15-19.xlsx"
+		range="B22:M30"
+		concentrations=[Blank]:[8, 9],[20 ug/ml + 50 ppm]:[5, 11],[50 ug/ml + 100 ppm]:[4, 10],[100 ug/ml + 200 ppm]:[6, 7]
+		}
+	}
+	{
+	experiment="23"
+	date="6/12/2019"
+	compounds="Ox66"
+	concentrations="Blank, 50 ppm, 100 ppm, 200 ppm"
+	exposure_time="48 Hours"
+	condition="Normoxia"
+	assay="MTT"
+	comments=""
+		{
+		plate="1"
+		file="Data\MTT\MTT 6-12-19\A549 + Ox66 48HRS Normoxia MTT 6-12-19.xlsx"
+		range="B2:M9"
+		concentrations=[Blank]:[8, 10],[50 ppm]:[5, 9],[100 ppm]:[7, 11],[200 ppm]:[4, 6]
+		}
+		{
+		plate="2"
+		file="Data\MTT\MTT 6-12-19\A549 + Ox66 48HRS Normoxia MTT 6-12-19.xlsx"
+		range="B12:M19"
+		concentrations=[Blank]:[6, 8],[50 ppm]:[4, 10],[100 ppm]:[9, 11],[200 ppm]:[5, 7]
+		}
+		{
+		plate="3"
+		file="Data\MTT\MTT 6-12-19\A549 + Ox66 48HRS Normoxia MTT 6-12-19.xlsx"
+		range="B22:M30"
+		concentrations=[Blank]:[4, 7],[50 ppm]:[8, 10],[100 ppm]:[6, 9],[200 ppm]:[5, 11]
+		}
+	}
+	{
+	experiment="24"
+	date="6/12/2019"
+	compounds="Ox66"
+	concentrations="Blank, 50 ppm, 100 ppm, 200 ppm"
+	exposure_time="48 Hours"
+	condition="Hypoxia"
+	assay="MTT"
+	comments=""
+		{
+		plate="1"
+		file="Data\MTT\MTT 6-12-19\A549 + Ox66 48HRS Hypoxia MTT 6-12-19.xlsx"
+		range="B2:M9"
+		concentrations=[Blank]:[8, 10],[50 ppm]:[5, 9],[100 ppm]:[7, 11],[200 ppm]:[4, 6]
+		}
+		{
+		plate="2"
+		file="Data\MTT\MTT 6-12-19\A549 + Ox66 48HRS Hypoxia MTT 6-12-19.xlsx"
+		range="B12:M19"
+		concentrations=[Blank]:[6, 8],[50 ppm]:[4, 10],[100 ppm]:[9, 11],[200 ppm]:[5, 7]
+		}
+		{
+		plate="3"
+		file="Data\MTT\MTT 6-12-19\A549 + Ox66 48HRS Hypoxia MTT 6-12-19.xlsx"
+		range="B22:M30"
+		concentrations=[Blank]:[4, 7],[50 ppm]:[8, 10],[100 ppm]:[6, 9],[200 ppm]:[5, 11]
+		}
 	}
 }
 
