@@ -103,7 +103,7 @@ def grab_plates(cell_line, experiment):
                     range = line.split("=")[1].split("\"")[1]
 
                 elif line.split("=")[0] == "\t\tconcentrations":
-                    concentrations = prase_concentrations(line.split("=")[1])
+                    concentrations = parse_concentrations(line.split("=")[1])
 
         if len(line) > 3:
             if line[2] == "}":
@@ -301,7 +301,6 @@ def modify_plate(cell_line, experiment, plate, field, new):
             file.write(buf)
 
 
-
 def delete_plate(cell_line, experiment, plate):
     f = open("Data.ad")
     cell_line_starts_at = 0
@@ -389,7 +388,7 @@ def delete_experiment(cell_line, experiment):
             out_file.close()
 
 
-def prase_concentrations(line):
+def parse_concentrations(line):
     items = re.findall(r'\[.*?\]:\[.*?\]', line)
     concentrations_dict = OrderedDict()
 
@@ -399,5 +398,5 @@ def prase_concentrations(line):
         rows = [int(x) for x in rows.split(",") if x != '']
         concentrations_dict[concentration] = rows
 
-    return (concentrations_dict)
+    return concentrations_dict
 

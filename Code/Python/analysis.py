@@ -73,6 +73,7 @@ class DelegateDropBox(QtWidgets.QStyledItemDelegate):
         combo_box.addItems(items_to_add)
         return combo_box
 
+
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
@@ -111,7 +112,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.bttnPlot.clicked.connect(self.plot)
         self.comboCellLines.currentTextChanged.connect(self.new_cell_line)
         self.bttnExcel.clicked.connect(self.save_to_excel)
-        self.bttnCompare.clicked.connect(self.openComparisonWindow)
+        self.bttnCompare.clicked.connect(self.open_comparison_window)
         self.bttnCopy.clicked.connect(self.copy_concentrations)
         self.bttnPaste.clicked.connect(self.paste_concentrations)
         self.bttnPaste.setEnabled(False)
@@ -299,10 +300,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 if p_value < 0.05:
                     significance.append(index)
 
-
             y_pos = np.arange(len(concentrations))
-
-            #figure = plt.figure()
             figure, ax = plt.subplots()
             rects = ax.bar(y_pos, values_mean.values(), align='center', alpha=0.5)
             ax.set_xticks(y_pos)
@@ -359,7 +357,7 @@ class MainWindow(QtWidgets.QMainWindow):
         excel_window.show()
 
 
-    def openComparisonWindow(self):
+    def open_comparison_window(self):
         self.comparison_window = ComparisonWindow()
         self.comparison_window.show()
 
@@ -372,6 +370,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def filter_txt_changed(self):
         self.proxyModel.setFilterKeyColumn(0)
+
 
 def convert_letter_to_number(letter):
     total = 0
